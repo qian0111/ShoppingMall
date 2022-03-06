@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qian.dao.manager.IManagerDao"><!--namespace属性关联dao层-->
+
+    <!--orm 对象和数据表之间的映射关系-->
+    <resultMap id="baseMap" type="com.qian.model.manager.Manager">
+        <!--
+        column 指定数据表字段
+        property 指定类属性
+        jdbcType 指定数据类型 int-INTEGER string-VARCHAR
+        -->
+        <result column="id"     property="id"    jdbcType="INTEGER"/>
+        <result column="m_name" property="mName" jdbcType="VARCHAR"/>
+        <result column="m_pass" property="mPass" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--
+    parameterType 参数类型
+    resultMap 结果集映射 对应的是resultMap.id
+    -->
+    <select id="query" parameterType="com.qian.model.manager.Manager" resultMap="baseMap">
+        <!-- #{} 会自动在变量前后拼一个英文单引号-->
+        SELECT * FROM manage_info
+        <where> <!-- where标签会把标签中的第一条if语句中的and去掉-->
+            <if test="manager.id != null ">    AND id = #{manager.id} </if>
+            <if test="manager.mName != null "> AND staff_name = #{manager.mName} </if>
+            <if test="manager.mPass != null "> AND pass = #{s.passmanager.mPass} </if>
+        </where>
+    </select>
+
+</mapper>

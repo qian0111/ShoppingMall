@@ -22,9 +22,9 @@
         <!-- #{} 会自动在变量前后拼一个英文单引号-->
         SELECT * FROM manage_info
         <where> <!-- where标签会把标签中的第一条if语句中的and去掉-->
-            <if test="manager.id != null ">    AND id = #{manager.id} </if>
-            <if test="manager.mName != null "> AND staff_name = #{manager.mName} </if>
-            <if test="manager.mPass != null "> AND pass = #{s.passmanager.mPass} </if>
+            <if test="id != null ">    AND id = #{id} </if>
+            <if test="mName != null "> AND m_name = #{mName} </if>
+            <if test="mPass != null "> AND m_pass = #{mPass} </if>
         </where>
     </select>
 

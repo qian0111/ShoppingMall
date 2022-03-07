@@ -1,16 +1,16 @@
-<html>
+<html lang="en">
 	<head>
 		<title>个人商店管理系统</title>
 		<meta charset="utf-8">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">	
 		<!-- Styles -->
-	    <link href="../../static/css/fontawesome-all.min.css" rel="stylesheet">
-	    <link href="../../static/css/themify-icons.css" rel="stylesheet">
-	    <link href="../../static/css/bootstrap.min.css" rel="stylesheet">
-	    <link href="../../static/css/nixon.css" rel="stylesheet">
-	    <link href="../../static/css/style.css" rel="stylesheet">
-		<script src="../../static/js/jquery-1.9.1.min.js"></script>
+	    <link href="../static/css/fontawesome-all.min.css" rel="stylesheet">
+	    <link href="../static/css/themify-icons.css" rel="stylesheet">
+	    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+	    <link href="../static/css/nixon.css" rel="stylesheet">
+	    <link href="../static/css/style.css" rel="stylesheet">
+		<script src="../static/js/jquery-1.9.1.min.js"></script>
 		<script>		
 			function login(){
 				var mName = $("#mName").val();
@@ -37,7 +37,7 @@
 							$("#loginButton").text("正在跳转...");
 							setTimeout(
 								function(){
-									window.location.href="mainPage";
+									window.location.href="mainPage?mName=" + mName;
 							    }
 								,500
 							);
@@ -64,14 +64,14 @@
 					<div class="col-lg-6 col-lg-offset-3">
 						<div class="login-content">
 							<div class="login-logo">
-								<span>商城后台管理系统</span>
+								<span>个人商店后台管理系统</span>
 							</div>
 							<div class="login-form">
 								<h4>管理员登录</h4>
 								<form>
 									<div class="form-group">
 										<label>用户名</label>
-										<input type="text" class="form-control" id="mName" placeholder="请输入用户名"> 
+										<input type="text" class="form-control" id="mName" placeholder="请输入用户名" >
 									</div>
 									<div class="form-group">
 										<label>密码</label>

@@ -11,10 +11,8 @@ public class Goods {
     private Integer gStatus;//1-上架，2-下架
     private Integer cId;//分类id
     private String cName;//分类名
-    private Integer secondCId;//二级分类id
-    private String secondCName;//二级分类名
-    private Integer firstCId;//一级分类id
-    private String firstCName;//一级分类名
+    private Integer parentId;//一级分类id
+    private String parentName;//一级分类名
     private Integer pageNo;//分页：第n页
     private Integer pageCount;//分页：每页页数
 
@@ -85,36 +83,20 @@ public class Goods {
         this.cName = cName;
     }
 
-    public Integer getSecondCId() {
-        return secondCId;
+    public Integer getParentId() {
+        return parentId;
     }
 
-    public void setSecondCId(Integer secondCId) {
-        this.secondCId = secondCId;
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 
-    public String getSecondCName() {
-        return secondCName;
+    public String getParentName() {
+        return parentName;
     }
 
-    public void setSecondCName(String secondCName) {
-        this.secondCName = secondCName;
-    }
-
-    public Integer getFirstCId() {
-        return firstCId;
-    }
-
-    public void setFirstCId(Integer firstCId) {
-        this.firstCId = firstCId;
-    }
-
-    public String getFirstCName() {
-        return firstCName;
-    }
-
-    public void setFirstCName(String firstCName) {
-        this.firstCName = firstCName;
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
     }
 
     public Integer getPageNo() {
@@ -144,10 +126,8 @@ public class Goods {
                 ", gStatus=" + gStatus +
                 ", cId=" + cId +
                 ", cName='" + cName + '\'' +
-                ", secondCId=" + secondCId +
-                ", secondCName='" + secondCName + '\'' +
-                ", firstCId=" + firstCId +
-                ", firstCName='" + firstCName + '\'' +
+                ", parentId=" + parentId +
+                ", parentName='" + parentName + '\'' +
                 ", pageNo=" + pageNo +
                 ", pageCount=" + pageCount +
                 '}';

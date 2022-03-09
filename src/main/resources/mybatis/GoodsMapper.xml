@@ -17,10 +17,8 @@
         <result column="g_status"      property="gStatus"     jdbcType="INTEGER"/>
         <result column="c_id"          property="cId"         jdbcType="INTEGER"/>
         <result column="c_name"        property="cName"       jdbcType="VARCHAR"/>
-        <result column="second_c_id"   property="secondCId"   jdbcType="INTEGER"/>
-        <result column="second_c_name" property="secondCName" jdbcType="VARCHAR"/>
-        <result column="first_c_id"    property="firstCId"    jdbcType="INTEGER"/>
-        <result column="first_c_name"  property="firstCName"  jdbcType="VARCHAR"/>
+        <result column="parent_id"     property="parentId"    jdbcType="INTEGER"/>
+        <result column="parent_name"   property="parentName"  jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--
@@ -29,11 +27,10 @@
     -->
     <select id="query" parameterType="com.qian.model.manager.Goods" resultMap="baseMap">
         <!-- #{} 会自动在变量前后拼一个英文单引号-->
-        SELECT g.*,c1.c_name,c1.parent_id AS second_c_id,c2.c_name AS second_c_name,c2.parent_id as first_c_id,c3.c_name as first_c_name
+        SELECT g.*,c1.c_name,c1.parent_id, c2.c_name AS parent_name
         FROM goods_info AS g
         LEFT JOIN category AS c1 ON g.c_id = c1.id
         LEFT JOIN category AS c2 ON c1.parent_id = c2.id
-        LEFT JOIN category AS c3 ON c2.parent_id = c3.id
         <where> <!-- where标签会把标签中的第一条if语句中的and去掉-->
             <if test="id != null ">          AND g.id = #{id} </if>
             <if test="gName != null ">       AND g_name LIKE concat('%',#{gName},'%')</if>
@@ -43,20 +40,17 @@
             <if test="gStatus != null ">     AND g_status = #{gStatus} </if>
             <if test="cId != null ">         AND c1.id = #{cId} </if>
             <if test="cName != null ">       AND c1.c_name = #{cName} </if>
-            <if test="secondCId != null ">   AND c2.id = #{secondCId} </if>
-            <if test="secondCName != null "> AND c2.c_name = #{secondCName} </if>
-            <if test="firstCId != null ">    AND c3.id = #{firstCId} </if>
-            <if test="firstCName != null ">  AND c3.c_name = #{firstCName} </if>
+            <if test="parentId != null ">    AND c2.id = #{parentId} </if>
+            <if test="parentName != null ">  AND c2.c_name = #{parentName} </if>
         </where>
         <if test="pageNo != null and pageCount != null">LIMIT #{pageNo}, #{pageCount}</if>
     </select>
 
-    <select id="countOnGoods" parameterType="com.qian.model.manager.Goods" resultType="java.lang.Long">
+    <select id="countGoods" parameterType="com.qian.model.manager.Goods" resultType="java.lang.Long">
         SELECT COUNT(*)
         FROM goods_info AS g
         LEFT JOIN category AS c1 ON g.c_id = c1.id
         LEFT JOIN category AS c2 ON c1.parent_id = c2.id
-        LEFT JOIN category AS c3 ON c2.parent_id = c3.id
         <where> <!-- where标签会把标签中的第一条if语句中的and去掉-->
             <if test="id != null ">          AND g.id = #{id} </if>
             <if test="gName != null ">       AND g_name LIKE concat('%',#{gName},'%')</if>
@@ -66,47 +60,74 @@
             <if test="gStatus != null ">     AND g_status = #{gStatus} </if>
             <if test="cId != null ">         AND c1.id = #{cId} </if>
             <if test="cName != null ">       AND c1.c_name = #{cName} </if>
-            <if test="secondCId != null ">   AND c2.id = #{secondCId} </if>
-            <if test="secondCName != null "> AND c2.c_name = #{secondCName} </if>
-            <if test="firstCId != null ">    AND c3.id = #{firstCId} </if>
-            <if test="firstCName != null ">  AND c3.c_name = #{firstCName} </if>
+            <if test="parentId != null ">    AND c2.id = #{parentId} </if>
+            <if test="parentName != null ">  AND c2.c_name = #{parentName} </if>
         </where>
     </select>
 
-    <select id="countOffGoods" parameterType="com.qian.model.manager.Goods" resultType="java.lang.Long">
-        SELECT COUNT(*)
-        FROM goods_info AS g
-        LEFT JOIN category AS c1 ON g.c_id = c1.id
-        LEFT JOIN category AS c2 ON c1.parent_id = c2.id
-        LEFT JOIN category AS c3 ON c2.parent_id = c3.id
-        <where> <!-- where标签会把标签中的第一条if语句中的and去掉-->
-            <if test="id != null ">          AND g.id = #{id} </if>
-            <if test="gName != null ">       AND g_name LIKE concat('%',#{gName},'%')</if>
-            <if test="gImage != null ">      AND g_image = #{gImage} </if>
-            <if test="gPrice != null ">      AND g_price = #{gPrice} </if>
-            <if test="gCount != null ">      AND g_count = #{gCount} </if>
-            <if test="gStatus != null ">     AND g_status = #{gStatus} </if>
-            <if test="cId != null ">         AND c1.id = #{cId} </if>
-            <if test="cName != null ">       AND c1.c_name = #{cName} </if>
-            <if test="secondCId != null ">   AND c2.id = #{secondCId} </if>
-            <if test="secondCName != null "> AND c2.c_name = #{secondCName} </if>
-            <if test="firstCId != null ">    AND c3.id = #{firstCId} </if>
-            <if test="firstCName != null ">  AND c3.c_name = #{firstCName} </if>
-        </where>
-    </select>
-
-    <select id="firstCategory" resultMap="baseMap">
-        SELECT id as first_c_id, c_name as first_c_name FROM category
+    <select id="parentCategory" resultMap="baseMap">
+        SELECT id as parent_id, c_name as parent_name FROM category
         WHERE level=1
     </select>
 
     <select id="categoryTree" resultMap="baseMap">
-        SELECT c1.id as c_id,c1.c_name,c2.id AS second_c_id,c2.c_name AS second_c_name,c3.id as first_c_id,c3.c_name as first_c_name
+        SELECT c1.id as c_id,c1.c_name,c1.parent_id,c2.c_name AS parent_name
         FROM category AS c1
         INNER JOIN category AS c2 ON c1.parent_id = c2.id
-        INNER JOIN category AS c3 ON c2.parent_id = c3.id
     </select>
 
+    <update id="upGoods" parameterType="com.qian.model.manager.Goods">
+        update goods_info
+        <set>
+            <if test="gName != null ">       g_name = #{gName}, </if>
+            <if test="gImage != null ">      g_image = #{gImage}, </if>
+            <if test="gPrice != null ">      g_price = #{gPrice}, </if>
+            <if test="gCount != null ">      g_count = #{gCount}, </if>
+            <if test="gStatus != null ">     g_status = #{gStatus}, </if>
+            <if test="cId != null ">         c1.id = #{cId}, </if>
+            <if test="cName != null ">       c1.c_name = #{cName}, </if>
+            <if test="parentId != null ">    c2.id = #{parentId}, </if>
+            <if test="parentName != null ">  c2.c_name = #{parentName}, </if>
+        </set>
+        <where>
+            <if test="id != null">and id = #{id}</if>
+        </where>
+    </update>
+
+    <update id="offGoods" parameterType="java.lang.Integer">
+        update goods_info set g_status=0 where id = #{id}
+    </update>
+
+    <update id="reOnGoods" parameterType="java.lang.Integer">
+        update goods_info set g_status=1 where id = #{id}
+    </update>
+
+    <insert id="insertOne" parameterType="com.qian.model.manager.Goods">
+        insert into goods_info
+        <!--
+        prefix 前缀
+        suffix 后缀
+        suffixOverrides 去除拼接语句中的最后一个逗号
+        -->
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gName != null ">       g_name, </if>
+            <if test="gImage != null ">      g_image, </if>
+            <if test="gPrice != null ">      g_price, </if>
+            <if test="gCount != null ">      g_count, </if>
+            <if test="cId != null ">         c_id, </if>
+            <if test="cName != null ">       c_name, </if>
+            g_status,
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="gName != null ">       #{gName}, </if>
+            <if test="gImage != null ">      #{gImage}, </if>
+            <if test="gPrice != null ">      #{gPrice}, </if>
+            <if test="gCount != null ">      #{gCount}, </if>
+            <if test="cId != null ">         #{cId}, </if>
+            <if test="cName != null ">       #{cName}, </if>
+            1,
+        </trim>
+    </insert>
 </mapper>
 
 

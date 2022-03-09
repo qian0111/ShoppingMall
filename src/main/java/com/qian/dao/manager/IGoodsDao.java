@@ -11,14 +11,23 @@ public interface IGoodsDao {
     public List<Goods> query(Goods goods);
 
     //查询上架商品总数
-    public Long countOnGoods(Goods goods);
-
-    //查询下架商品总数
-    public Long countOffGoods(Goods goods);
+    public Long countGoods(Goods goods);
 
     //查询一级分类
-    public List<Goods> firstCategory();
+    public List<Goods> parentCategory();
 
-    //查询二级分类
+    //查询分类树
     public List<Goods> categoryTree();
+
+    //更新商品信息
+    public int upGoods(Goods goods);
+
+    //上架商品
+    public int insertOne(Goods goods);
+
+    //下架商品
+    public int offGoods(int id);
+
+    //重新上架
+    public int reOnGoods(int id);
 }

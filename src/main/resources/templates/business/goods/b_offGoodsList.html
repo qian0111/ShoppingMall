@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="utf-8">
 	<title></title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="../static/layui//css/layui.css">
     <!-- Styles -->
     <link href="../static/css/fontawesome-all.min.css" rel="stylesheet">
     <link href="../static/css/themify-icons.css" rel="stylesheet">
+    <link href="../static/css/mmc-chat.css" rel="stylesheet" />
     <link href="../static/css/sidebar.css" rel="stylesheet">
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
     <link href="../static/css/nixon.css" rel="stylesheet">
     <link href="../static/css/lobipanel.min.css" rel="stylesheet">
     <link href="../static/css/style.css" rel="stylesheet">
+     <style>
+		::-webkit-scrollbar {display:none}
+	</style>
 </head>
 <body>
 	<div class="main">
@@ -22,11 +26,11 @@
 				<div class="col-lg-12">
 					<div class="card alert col-lg-12">				
                     	<div class="card-body">
-                    		<form action="onGoodsListPage" method="POST">
+                    		<form action="s?method=listPage" method="POST">
                     			<div class="col-lg-3 p-0">
 				        			<div class="page-header">
-				        				<div class="page-title">
-											<h1><input type="text" placeholder="请输入商品名" class="form-control" name="gName" th:value="${gName}"></h1>
+				        				<div class="page-title">                            
+				        					<h1><input class="form-control" type="text" placeholder="请输入商品名"  name="id" value=""></h1>
 				        				</div>
 				        			</div>
 				    			</div>
@@ -34,12 +38,8 @@
 			       					 <div class="page-header">
 							            <div class="page-title">                            
 							               <h1>
-							               	<select id="firstCategory" class="form-control"  name="firstCategory" onchange="secondCategory()">
-												<option selected="selected" value="">一级分类</option>
-												<option th:each="firstCategory:${firstCategories}"
-														th:value="${firstCategory.firstCId}"
-														th:text="${firstCategory.firstCName}"
-														th:selected="${firstCategory.firstCId eq goods.firstCId} ? 'selected' : '' "></option>
+							               	<select class="form-control"  name="deptId">
+												<option value="">一级分类</option>	
 											</select>
 										  </h1>
 							           </div>
@@ -49,12 +49,8 @@
 									 <div class="page-header">
 								        <div class="page-title">                            
 								           <h1>
-								           	<select class="form-control"  name="secondCategory">
-								           		<option selected="selected" value="">二级分类</option>
-												<option th:each="secondCategory:${secondCategories}"
-														th:value="${secondCategory.secondCId}"
-														th:text="${secondCategory.secondCName}"
-														th:selected="${secondCategory.secondCId eq goods.secondCId} ? 'selected' : '' "></option>
+								           	<select class="form-control"  name="deptId">
+								           		<option value="">二级分类</option>	
 								           	</select>
 										  </h1>
 								       </div>
@@ -84,50 +80,48 @@
 						<!--  <div class="card-body" style="height:400px;overflow-y: scroll;" > -->
 						<div class="row">
                       	<div class="col-lg-2">
-                      		<button class="btn btn-danger" onclick="offGoods()">一键下架</button>
-							<button class="btn btn-danger" onclick="onGoods()">上架商品</button>
+                      		<button class="btn btn-danger" onclick="reOnGoods()">一键上架</button>
                       	</div>
-						</div>
-						<div class="card-body">
-							<table class="table table-responsive table-hover">
-								<colgroup>
-									<col width="5%">
-									<col width="5%">
-									<col width="35%">
-									<col width="10%">
-									<col width="10%">
-									<col width="15%">
-									<col width="10%">
-									<col width="10%">
-								</colgroup>
-								<thead>
-									<tr>
-										<th>
-									  		<input type="checkbox" onclick="checkAll(this.checked);"/>
-										</th>
-										<th>编号</th>
-										<th>名称</th>
-										<th>单价</th>
-										<th>库存</th>
-										<th>分类编号</th>
-										<th>分类名称</th>
-										<th>操作</th>
-									</tr>
+					</div>
+					<div class="card-body" style="height:350px;" >
+						<table class="table table-responsive table-hover">
+							<colgroup>
+								<col width="5%">
+								<col width="5%">
+								<col width="35%">
+								<col width="10%">
+								<col width="10%">
+								<col width="15%">
+								<col width="10%">
+								<col width="10%">
+							</colgroup>
+							<thead>
+								<tr>
+									<th>
+										<input type="checkbox" onclick="checkAll(this.checked);"/>
+									</th>
+									<th>编号</th>
+									<th>名称</th>
+									<th>单价</th>
+									<th>库存</th>
+									<th>分类编号</th>
+									<th>分类名称</th>
+									<th>操作</th>
+								</tr>
 								</thead>
 								<tbody>
-									<tr th:each="goods:${goodsList}">
-										<td><input type="checkbox" name="g_box" value="1"/></td>
-										<td th:text="${goods.id}"></td>
-										<td th:text="${goods.gName}"></td>
-										<td th:text="${goods.gPrice}"></td>
-										<td th:text="${goods.gCount}"></td>
-										<td th:text="${goods.cId}"></td>
-										<td th:text="${goods.cName}"></td>
-										<td><button class="btn btn-danger" type="button" onclick="upGoodsInfo()">更新</button></td>
-									</tr>
+								<tr th:each="goods:${goodsList}">
+									<td><input type="checkbox" name="g_box" th:value="${goods.id}"/></td>
+									<td th:text="${goods.id}"></td>
+									<td th:text="${goods.gName}"></td>
+									<td th:text="${goods.gPrice}"></td>
+									<td th:text="${goods.gCount}"></td>
+									<td th:text="${goods.cId}"></td>
+									<td th:text="${goods.cName}"></td>
+									<td><button class="btn btn-danger" type="button" th:onclick="upGoodsInfo([[${goods.id}]])">更新</button></td>
+								</tr>
 								</tbody>
 							</table>
-							<div></div>
                      	</div>
 						<div class="row">
 							<div class="col-lg-12" id="lp" align="center"></div>
@@ -148,6 +142,13 @@
 <!-- sidebar -->
 <script src="../static/js/bootstrap.min.js"></script>
 <!-- bootstrap -->
+<script src="../static/js/mmc-common.js"></script>
+<script src="../static/js/mmc-chat.js"></script>
+<!--  Chart js -->
+<script src="../static/js/Chart.bundle.js"></script>
+<script src="../static/js/chartjs-init.js"></script>
+<!-- // Chart js -->
+<!--  Datamap -->
 <script src="../static/js/d3.min.js"></script>
 <script src="../static/js/topojson.js"></script>
 <script src="../static/js/datamaps.world.min.js"></script>
@@ -156,7 +157,7 @@
 <!-- // Datamap -->
 <script src="../static/js/scripts.js"></script>
 <script src="../static/layui/layui.js"></script>
-<script script type="text/javascript" th:inline="javascript">
+<script>
 	//加载模块（组件）
 	layui.use(['layer','laypage'], function(){
 		//创建弹出层对象
@@ -166,45 +167,31 @@
 		//执行一个laypage实例
 		laypage.render({
 			elem: 'lp' //注意，这里的lp是id，不用加#号
-		    ,count: [[${totalCount}]] //数据总数，从服务端得到
+			,count: [[${totalCount}]] //数据总数，从服务端得到
 			,limit: [[${pageCount}]] //每页显示的条数，laypage将会借助 count 和 limit 计算出分页数。
 			,curr: [[${pageNo}]]//起始页码
 			,jump: function(obj, first){
 				var pageNo = obj.curr;
 				var pageCount = obj.limit;
-				var url = "onGoodsListPage?pageNo=" + pageNo;
+				var url = "offGoodsListPage?pageNo=" + pageNo;
 				url += "&pageCount="+ pageCount;
 				url += "&"+$("form").serialize();
 				console.info(url);
 				//首次不执行
 				if(!first){
-	  				window.location.href = url;
-	  				//ajax仅能用于前后端数据交互，不能用于页面跳转
+					window.location.href = url;
+					//ajax仅能用于前后端数据交互，不能用于页面跳转
 				}
 			}
 		});
 	});
 
-	//根据一级框的结果联动二级框的内容
-	function secondCategory(){
-
-	}
-
-	function upGoodsInfo(){		
+	function upGoodsInfo(id){
 		layer.open({
 			type: 2,
 			title: "更新商品信息",
 			area: ['600px', '400px'],
-			content: "b_upGoodsInfo.html"
-		});
-	}
-	
-	function onGoods(){		
-		layer.open({
-			type: 2,
-			title: "上架商品",
-			area: ['600px', '400px'],
-			content: "b_onGoods.html"
+			content: "upGoodsInfo?id="+id
 		});
 	}
 	
@@ -222,16 +209,33 @@
 		}
 
 	}
-
-	//一键下架
-	function offGoods(){
+上
+	//一键架
+	function reOnGoods(){
 		var arr = [];
 		$(":checkbox[name='g_box']:checked").each(function(index,ele) {
 			console.info(index+","+$(ele).val());
 			arr[index] = $(ele).val();
-	   });
-	   // console.info(arr);
-	   alert("下架商品id："+arr);
+		});
+		console.info(arr);
+		$.ajax({
+			url: "reOnGoods",
+			data: {"arr":arr},
+			type: "POST",
+			traditional: true,
+			success:function(str){
+				if(str.code == 1){
+					alert("上架成功");
+				}
+				else{
+					alert("上架失败");
+				}
+			},
+			error:function(){
+
+			}
+		});
+		setTimeout(function() {location.reload()}, 100);
 	}
 </script>
 </html>

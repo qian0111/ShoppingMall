@@ -1,4 +1,4 @@
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<title>个人商店管理系统</title>
 		<meta charset="utf-8">
@@ -32,12 +32,12 @@
 					url: "loginCheck",//请求地址
 					type:"POST",//请求方式GET/POST
 					data: {"mName":mName,"mPass":mPass},
-					success:function(str){//请求成功之后的回调函数，接收服务端响应的数据
-						if(str == "1"){
+					success:function(d){//请求成功之后的回调函数，接收服务端响应的数据
+						if(d.code == 1){
 							$("#loginButton").text("正在跳转...");
 							setTimeout(
 								function(){
-									window.location.href="mainPage?mName=" + mName;
+									window.location.href="mainPage?id=" + d.obj.id;
 							    }
 								,500
 							);

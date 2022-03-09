@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,13 +25,13 @@
                    		<a class="sidebar-sub-toggle"><i class="ti-package"></i>商品管理<span class="sidebar-collapse-icon ti-angle-down"></span></a>
                    		<ul>
                             <li><a href="onGoodsListPage" target="main">商品列表</a></li>
-                            <li><a href="b_offGoodsList.html" target="main">下架商品</a></li>
+                            <li><a href="offGoodsListPage" target="main">下架商品</a></li>
                         </ul>
                     </li>
                     <li>
 						<a class="sidebar-sub-toggle"><i class="ti-clipboard"></i>订单管理<span class="sidebar-collapse-icon ti-angle-down"></span></a>
                         <ul>
-                            <li><a href="b_deliveredOrder.html" target="main">发货订单</a></li>
+                            <li><a href="/sm/ordermanage/deliveredOrderPage" target="main">发货订单</a></li>
                             <li><a href="b_refundOrder.html" target="main">退款订单</a></li>
 							<li><a href="b_finishOrder.html" target="main">完成订单</a></li>
                         </ul>
@@ -64,12 +64,12 @@
             </ul>
         </div>
    	</div>
-    <div class="content-wrap">                                 	
-        <iframe name="main" 
+    <div class="content-wrap">
+        <iframe name="main"
 			src="onGoodsListPage"
-			frameborder="0" 
+			frameborder="0"
 			style="width: 100%; height: 1000px;">
-		</iframe>                                                     	            	  
+		</iframe>
    </div>
 </body>
 <script src="../static/js/jquery-1.9.1.min.js"></script>

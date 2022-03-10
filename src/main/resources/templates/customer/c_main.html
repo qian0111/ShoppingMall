@@ -1,0 +1,243 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>buyall</title>
+	<!-- ================= Favicon ================== -->
+	<!-- Standard -->
+	<link rel="shortcut icon" href="http://placehold.it/64.png/000/fff">
+	<!-- Retina iPad Touch Icon-->
+	<link rel="apple-touch-icon" sizes="144x144" href="http://placehold.it/144.png/000/fff">
+	<!-- Retina iPhone Touch Icon-->
+	<link rel="apple-touch-icon" sizes="114x114" href="http://placehold.it/114.png/000/fff">
+	<!-- Standard iPad Touch Icon-->
+	<link rel="apple-touch-icon" sizes="72x72" href="http://placehold.it/72.png/000/fff">
+	<!-- Standard iPhone Touch Icon-->
+	<link rel="apple-touch-icon" sizes="57x57" href="http://placehold.it/57.png/000/fff">
+	<!-- Styles -->
+	<link rel="stylesheet" type="text/css" href="/sm/static/layui/css/layui.css">
+	<link href="/sm/static/css/fontawesome-all.min.css" rel="stylesheet">
+	<link href="/sm/static/css/themify-icons.css" rel="stylesheet">
+	<link href="/sm/static/css/mmc-chat.css" rel="stylesheet" />
+	<link href="/sm/static/css/sidebar.css" rel="stylesheet">
+	<link href="/sm/static/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/sm/static/css/nixon.css" rel="stylesheet">
+	<link href="/sm/static/css/lobipanel.min.css" rel="stylesheet">
+	<link href="/sm/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="header">
+				<div class="pull-left">
+					<div class="logo">
+						<a >
+							<img id="logoImg" src="/sm/static/images/welcome.png" alt="" />
+						</a>
+					</div>
+				</div>
+				<div class="pull-right p-r-15">
+					<ul>
+						<li class="header-icon dib input-group input-group-default">
+							<input type="text" placeholder="Search Default" name="Search" class="form-control " style="height: 30px; width: 300px;">
+							<i class="ti-search" style="padding-left: 12px;" onclick=""></i>
+						</li>
+						<span class="header-icon dib" style="width: 50px;"></span>
+						<li class="header-icon dib">
+							<i class="ti-shopping-cart"></i>
+							<span class="user-avatar" href="">购物车</span>
+						</li>
+						<li class="header-icon dib">
+							<i class="ti-clipboard"></i>
+							<span class="user-avatar" href="">我的订单</span>
+						</li>
+						<li class="header-icon dib">
+							<!-- <img class="avatar-img" src="img/avatar/1.jpg" alt="" /> -->
+							<i class="ti-user"></i>
+							<span class="user-avatar" th:text="${userName}">用户未登录</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row clearfix" style="padding-top: 50px;background-color: white">
+		<div class="col-md-3 column">
+			<div class="layui-panel" style="height: 650px;">
+				<ul class="layui-menu" id="docDemoMenu1">
+					<li class="layui-menu-item-parent" lay-options="{type: 'parent'}">
+						<div class="layui-menu-body-title">
+							menu item 5
+							<i class="layui-icon layui-icon-right"></i>
+						</div>
+						<div class="layui-panel layui-menu-body-panel">
+							<ul>
+								<li lay-options="{id: 1051}">
+									<div class="layui-menu-body-title">menu item 5-1</div>
+								</li>
+								<li lay-options="{id: 1051}">
+									<div class="layui-menu-body-title">menu item 5-2</div>
+								</li>
+							</ul>
+						</div>
+					</li>
+					<li class="layui-menu-item-parent" lay-options="{type: 'parent'}">
+						<div class="layui-menu-body-title">
+							menu item 5
+							<i class="layui-icon layui-icon-right"></i>
+						</div>
+						<div class="layui-panel layui-menu-body-panel">
+							<ul>
+								<li lay-options="{id: 1051}">
+									<div class="layui-menu-body-title">menu item 5-1</div>
+								</li>
+								<li lay-options="{id: 1051}">
+									<div class="layui-menu-body-title">menu item 5-2</div>
+								</li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-md-9 column">
+			<div>
+				<br>
+				<span style="font-size: 18px;font-weight: 500;color: #e80000;font-family: simhei;"> 热门推荐</span>
+				<div class="card-body">
+					<p class="text-muted m-b-15"></p>
+					<div class="row clearfix">
+						<div class="col-md-4"  style="padding-right:30px;">
+							<div class="thumbnail">
+								<a >
+									<img src="img/a1.jpg" alt="Lights" style="width:100%">
+									<div class="caption">
+										<div class="card-header">
+											<h4 style="color: red; font-size: 18px;">￥170</h4>
+										</div>
+										<p>这里是一串商品名，很长，名字越长大家搜索的关键字就越容易命中</p>
+									</div>
+								</a>
+							</div>
+						</div>
+						<div class="col-md-4" style="padding-left:30px;">
+							<div class="thumbnail">
+								<a href="">
+									<img src="img/a1.jpg" alt="Nature" style="width:100%">
+									<div class="caption">
+										<div class="card-header">
+											<h4 style="color: red; font-size: 18px;">￥170</h4>
+										</div>
+										<p>这里是一串商品名，很长，名字越长大家搜索的关键字就越容易命中</p>
+									</div>
+								</a>
+							</div>
+						</div>
+						<div class="col-md-4" style="padding-left:30px;">
+							<div class="thumbnail">
+								<a >
+									<img src="img/a1.jpg" alt="Fjords" style="width:100%">
+									<div class="caption">
+										<div class="card-header">
+											<h4 style="color: red; font-size: 18px;">￥170</h4>
+										</div>
+										<p>这里是一串商品名，很长，名字越长大家搜索的关键字就越容易命中</p>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+					<p class="text-muted m-b-15"></p>
+					<div class="row clearfix">
+						<div class="col-md-4"  style="padding-right:30px;">
+							<div class="thumbnail">
+								<a >
+									<img src="img/a1.jpg" alt="Lights" style="width:100%">
+									<div class="caption">
+										<div class="card-header">
+											<h4 style="color: red; font-size: 18px;">￥170</h4>
+										</div>
+										<p>这里是一串商品名，很长，名字越长大家搜索的关键字就越容易命中</p>
+									</div>
+								</a>
+							</div>
+						</div>
+						<div class="col-md-4" style="padding-left:30px;">
+							<div class="thumbnail">
+								<a >
+									<img src="img/a1.jpg" alt="Nature" style="width:100%">
+									<div class="caption">
+										<div class="card-header">
+											<h4 style="color: red; font-size: 18px;">￥170</h4>
+										</div>
+										<p>这里是一串商品名，很长，名字越长大家搜索的关键字就越容易命中</p>
+									</div>
+								</a>
+							</div>
+						</div>
+						<div class="col-md-4" style="padding-left:30px;">
+							<div class="thumbnail">
+								<a >
+									<img src="img/a1.jpg" alt="Fjords" style="width:100%">
+									<div class="caption">
+										<div class="card-header">
+											<h4 style="color: red; font-size: 18px;">￥170</h4>
+										</div>
+										<p>这里是一串商品名，很长，名字越长大家搜索的关键字就越容易命中</p>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</body>
+<script src="/sm/static/js/jquery-1.9.1.min.js"></script>
+<!-- /# content wrap -->
+<script src="/sm/static/js/jquery.min.js"></script>
+<!-- jquery vendor -->
+<script src="/sm/static/js/jquery.nanoscroller.min.js"></script>
+<!-- nano scroller -->
+<script src="/sm/static/js/sidebar.js"></script>
+<!-- sidebar -->
+<script src="/sm/static/js/bootstrap.min.js"></script>
+<!-- bootstrap -->
+<script src="/sm/static/js/mmc-common.js"></script>
+<script src="/sm/static/js/mmc-chat.js"></script>
+<!--  Chart js -->
+<script src="/sm/static/js/Chart.bundle.js"></script>
+<script src="/sm/static/js/chartjs-init.js"></script>
+<!-- // Chart js -->
+<!--  Datamap -->
+<script src="/sm/static/js/d3.min.js"></script>
+<script src="/sm/static/js/topojson.js"></script>
+<script src="/sm/static/js/datamaps.world.min.js"></script>
+<script src="/sm/static/js/datamap-init.js"></script>
+<script src="/sm/static/js/lobipanel.js"></script>
+<!-- // Datamap -->
+<script src="/sm/static/js/scripts.js"></script>
+<script src="/sm/static/layui/layui.js"></script>
+<!-- scripit init-->
+<script>
+	//如果当前窗口不是top窗口，则top窗口页面跳转到当前页面
+	// if(window != top)
+	// 	top.location.href = location.href;
+
+	$(document).ready(function() {
+		$('#lobipanel-custom-control').lobiPanel({
+			reload: false,
+			close: false,
+			editTitle: false
+		});
+	});
+</script>
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qian.dao.ICategoryDao">
+
+    <resultMap id="baseMap" type="Category">
+        <result column="id"        property="id"       jdbcType="INTEGER" />
+        <result column="c_name"    property="name"     jdbcType="VARCHAR" />
+        <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+        <result column="level"     property="level"    jdbcType="INTEGER" />
+        <result column="c_status"  property="status"   jdbcType="INTEGER" />
+    </resultMap>
+
+    <select id="queryAll" parameterType="com.qian.model.manager.Category" resultMap="baseMap">
+        select * FROM category
+        <where>
+            <if test="id != null"> and id = #{id}</if>
+            <if test="parentId != null">parent_id = #{parentId}</if>
+        </where>
+    </select>
+
+    <insert id="add" parameterType="com.qian.model.manager.Category">
+        insert into category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">c_name,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="status != null">c_status,</if>
+            level,
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="status != null">#{status},</if>
+            2,
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.qian.model.manager.Category">
+        update category set c_name=#{name} where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from category where id=#{id}
+    </delete>
+
+</mapper>

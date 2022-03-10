@@ -1,0 +1,133 @@
+<html>
+<head>
+	<title>员工管理系统</title>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- ================= Favicon ================== -->
+	<!-- Standard -->
+	<link rel="shortcut icon" href="http://placehold.it/64.png/000/fff">
+	<!-- Retina iPad Touch Icon-->
+	<link rel="apple-touch-icon" sizes="144x144" href="http://placehold.it/144.png/000/fff">
+	<!-- Retina iPhone Touch Icon-->
+	<link rel="apple-touch-icon" sizes="114x114" href="http://placehold.it/114.png/000/fff">
+	<!-- Standard iPad Touch Icon-->
+	<link rel="apple-touch-icon" sizes="72x72" href="http://placehold.it/72.png/000/fff">
+	<!-- Standard iPhone Touch Icon-->
+	<link rel="apple-touch-icon" sizes="57x57" href="http://placehold.it/57.png/000/fff">
+
+	<!-- Styles -->
+	<link href="/sm/static/css/fontawesome-all.min.css" rel="stylesheet">
+	<link href="/sm/static/css/themify-icons.css" rel="stylesheet">
+	<link href="/sm/static/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/sm/static/css/nixon.css" rel="stylesheet">
+	<link href="/sm/static/css/style.css" rel="stylesheet">
+
+	<script src="/sm/static/js/jquery-1.9.1.min.js"></script>
+	<script>
+		function register(){
+			var userName = $("#userName").val();
+			var userPass = $("#userPass").val();
+			var surePass = $("#surePass").val();
+			var userPhone = $("#userPhone").val();
+
+			if(userName == ''){
+				alert("用户名为空!");
+				$("#userName").focus();
+				return;
+			}
+			if(userPhone == ''){
+				alert("手机号为空");
+				$("#userPhone").focus();
+				return;
+			}
+			var regx = /^1[3456789]\d{9}$/;
+			if(!regx.test(userPhone)){
+				alert("手机号不合法");
+				$("#userPhone").focus();
+				return;
+			}
+			if(userPass == ''){
+				alert("密码为空!");
+				$("#userPass").focus();
+				return;
+			}
+			if(userPass != surePass){
+				alert("两次密码输入不一致，请重新输入！");
+				$("#userPass").val("");
+				$("#userPass").attr("placeholder","请输入密码");
+				$("#surePass").val("");
+				$("#surePass").attr("placeholder","请确认密码");
+				$("#userPass").focus();
+				return;
+			}
+
+			//ajax请求
+			$.ajax({
+				url: "register",//请求地址
+				type:"POST",//请求方式GET/POST
+				data:{"userName":userName, "userPass":userPass, "userPhone":userPhone},
+				success:function(str){//请求成功之后的回调函数，接收服务端响应的数据
+					if(str.code == 1){
+						$("#registerButton").text("正在跳转...");
+						setTimeout(
+								function(){
+									window.location.href="/sm/m/buy/mainPage?id="+str.obj;
+								}
+								,100
+						);
+					} else {
+						alert("注册失败");
+					}
+				},
+				error:function(){//请求失败之后的回调函数
+
+				}
+			});
+		}
+	</script>
+</head>
+
+<body class="bg-primary">
+<div class="Nixon-login">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3">
+				<div class="login-content">
+					<div class="login-logo">
+						<span>自营商城</span>
+					</div>
+					<div class="login-form">
+						<h4>用户注册</h4>
+						<form>
+							<div class="form-group">
+								<label>用户名</label>
+								<input type="text" class="form-control" id="userName" placeholder="请输入用户名/手机号">
+							</div>
+							<div class="form-group">
+								<label>手机号</label>
+								<input type="text" class="form-control" id="userPhone" placeholder="请输入手机号">
+							</div>
+							<div class="form-group">
+								<label>密码</label>
+								<input type="password" class="form-control" id="userPass" placeholder="请输入密码">
+							</div>
+							<div class="form-group">
+								<label>确认密码</label>
+								<input type="password" class="form-control" id="surePass" placeholder="请确认密码">
+							</div>
+							<button type="button" class="btn btn-danger btn-flat m-b-30 m-t-30" id="registerButton" onclick="register();">注册</button>
+							<div class="register-link m-t-15 text-center">
+								<p>如果您没有账户? <a href="loginPage">点击登录</a></p>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -14,7 +14,26 @@ public class Order {
     private Integer pageNo;//分页：第n页
     private Integer pageCount;//分页：每页页数
 
+    private Integer orderStatus2;//备用：订单状态
+    private String statusName;//解释状态码
+
     public Order() {
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public Integer getOrderStatus2() {
+        return orderStatus2;
+    }
+
+    public void setOrderStatus2(Integer orderStatus2) {
+        this.orderStatus2 = orderStatus2;
     }
 
     public String getOrderNo() {

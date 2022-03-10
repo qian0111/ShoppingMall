@@ -1,10 +1,12 @@
 package com.qian.job;
 
+import com.qian.controller.manager.GoodsController;
+import com.qian.service.manager.IOrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import java.util.Date;
 
 /*
 定时任务-演示类
@@ -12,6 +14,9 @@ import java.util.Date;
 @Configuration    //1. 主要用于标记配置类，兼备@Component的效果。
 //@EnableScheduling //2. 开启定时任务
 public class MyJob {
+    private Logger logger = LoggerFactory.getLogger(GoodsController.class);
+    @Autowired
+    private IOrderService orderService;
     /*
     Cron表达式参数分别表示：* * * * * *
     秒（0~59） 例如0/5表示每5秒
@@ -30,8 +35,9 @@ public class MyJob {
     0 0 13 * * * 每一天的下午1点执行
     0 0 6 1 * *  每个月的1号的早上6点执行
      */
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0 0 20 * * *")
     public void task(){
-        System.out.println(new Date());
+        int row = orderService.deliverTask();
+        logger.info("定时发货 状态码："+ row);
     }
 }

@@ -3,18 +3,18 @@
 <head>
 	<meta charset="utf-8">
 	<title></title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="/sm/static/layui/css/layui.css">
-    <!-- Styles -->
-    <link href="/sm/static/css/fontawesome-all.min.css" rel="stylesheet">
-    <link href="/sm/static/css/themify-icons.css" rel="stylesheet">
-    <link href="/sm/static/css/mmc-chat.css" rel="stylesheet" />
-    <link href="/sm/static/css/sidebar.css" rel="stylesheet">
-    <link href="/sm/static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/sm/static/css/nixon.css" rel="stylesheet">
-    <link href="/sm/static/css/lobipanel.min.css" rel="stylesheet">
-    <link href="/sm/static/css/style.css" rel="stylesheet">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="/sm/static/layui/css/layui.css">
+	<!-- Styles -->
+	<link href="/sm/static/css/fontawesome-all.min.css" rel="stylesheet">
+	<link href="/sm/static/css/themify-icons.css" rel="stylesheet">
+	<link href="/sm/static/css/mmc-chat.css" rel="stylesheet" />
+	<link href="/sm/static/css/sidebar.css" rel="stylesheet">
+	<link href="/sm/static/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/sm/static/css/nixon.css" rel="stylesheet">
+	<link href="/sm/static/css/lobipanel.min.css" rel="stylesheet">
+	<link href="/sm/static/css/style.css" rel="stylesheet">
      <style>
 		::-webkit-scrollbar {display:none}
 	</style>
@@ -26,15 +26,28 @@
 				<div class="col-lg-12">
 					<div class="card alert col-lg-12">				
                     	<div class="card-body">
-                    		<form action="deliveredOrderPage" method="POST">
+                    		<form action="finishOrderPage" method="POST">
                     			<div class="col-lg-3 p-0">
 				        			<div class="page-header">
-				        				<div class="page-title">                            
-				        					<h1><input class="form-control" type="text" placeholder="请输入订单号"  name="orderNo" th:value="${orderNo}"></h1>
-				        				</div>
+				        				<div class="page-title">
+											<h1><input class="form-control" type="text" placeholder="请输入订单号"  name="orderNo" th:value="${orderNo}"></h1>
+										</div>
 				        			</div>
 				    			</div>
-			   					<div class="col-lg-9 p-0">
+			    				<div class="col-lg-3 p-0">
+			       					 <div class="page-header">
+							            <div class="page-title">                            
+							               <h1>
+							               	<select class="form-control"  name="orderStatus">
+												<option value="">交易类型</option>
+												<option th:selected="${orderStatus == 3}" value="3">已签收</option>
+												<option th:selected="${orderStatus == 5}" value="5">已退款</option>
+											</select>
+										  </h1>
+							           </div>
+			        				</div>
+			    				</div>						
+			   					<div class="col-lg-6 p-0">
 					        		<div class="page-header">
 					           			<div class="page-title">                            
 					                		<h1 style="width: 100px;">
@@ -52,20 +65,26 @@
 				<div class="col-lg-12">              
                     <div class="card alert">
 						<div class="card-header">
-							<h4>商品列表</h4>                                                   
+							<h4>订单列表</h4>                                                   
 						</div>
 						<br>
+						<!--  <div class="card-body" style="height:400px;overflow-y: scroll;" > -->
+						<div class="row">
+                      		<div class="col-lg-2">
+                      			<button class="btn btn-danger" onclick="">导出表格</button>
+                      		</div>
+						</div>
 						<div class="card-body" style="height:350px;" >
 							<table class="table table-responsive table-hover">
 								<colgroup>
 									<col width="10%">
 									<col width="10%">
 									<col width="10%">
-									<col width="25%">
+									<col width="30%">
 									<col width="10%">
-									<col width="10%">	
 									<col width="10%">
-									<col width="15%">
+									<col width="10%">
+									<col width="10%">
 								</colgroup>
 								<thead>
 									<tr>
@@ -76,7 +95,7 @@
 										<th>单价</th>
 										<th>购买数量</th>
 										<th>订单金额</th>
-										<th>操作</th>
+										<th>状态</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -88,18 +107,15 @@
 										<td th:text="${order.gPrice}"></td>
 										<td th:text="${order.buyCount}"></td>
 										<td th:text="${order.payMoney}"></td>
-										<td>
-											<button class="btn btn-danger" type="button" th:onclick="refond([[${order.orderNo}]])">退款</button>
-											<button class="btn btn-danger" type="button" th:onclick="deliver([[${order.orderNo}]])">发货</button>
-										</td>
+										<td th:text="${order.statusName}"></td>
 									</tr>
 								</tbody>
-							</table>                          
+							</table>
 						</div>
 						<div class="row">
 							<div class="col-lg-12" id="lp" align="center"></div>
 						</div>
-					</div>                 
+					</div>
 				</div>
             </div>
 		</div>
@@ -146,7 +162,7 @@
 			,jump: function(obj, first){
 				var pageNo = obj.curr;
 				var pageCount = obj.limit;
-				var url = "deliveredOrderPage?pageNo=" + pageNo;
+				var url = "finishOrderPage?pageNo=" + pageNo;
 				url += "&pageCount="+ pageCount;
 				url += "&"+$("form").serialize();
 				console.info(url);
@@ -159,47 +175,5 @@
 		});
 	});
 
-	//退款
-	function refond(orderNo){
-		$.ajax({
-			url: "refond",
-			data: {"orderNo":orderNo},
-			type: "POST",
-			traditional: true,
-			success:function(str){
-				if(str.code == 1){
-					alert("已退款");
-				}
-				else{
-					alert("退款失败");
-				}
-			},
-			error:function(){
-
-			}
-		});
-		setTimeout(function() {location.reload()}, 100);
-	}
-	//发货
-	function deliver(orderNo){
-		$.ajax({
-			url: "deliver",
-			data: {"orderNo":orderNo},
-			type: "POST",
-			traditional: true,
-			success:function(str){
-				if(str.code == 1){
-					alert("已发货");
-				}
-				else{
-					alert("发货失败");
-				}
-			},
-			error:function(){
-
-			}
-		});
-		setTimeout(function() {location.reload()}, 100);
-	}
 </script>
 </html>

@@ -1,8 +1,7 @@
-package com.qian.controller.user;
+package com.qian.controller.manager;
 
 import com.qian.config.RedisUtil;
-import com.qian.controller.manager.BaseController;
-import com.qian.controller.manager.GoodsController;
+import com.qian.service.manager.IGoodsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,21 +9,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+//个人商店管理系统
 @RestController
-@RequestMapping("/m/buy")
-public class UserController extends BaseController{
+@RequestMapping("/m/manage")
+public class ManagerController extends BaseController{
+
     private Logger logger = LoggerFactory.getLogger(GoodsController.class);
 
     @Autowired
     private RedisUtil redisUtil;
 
-    @RequestMapping("/mainPage") //接收所有方式的HTTP请求，GET/POST
+    @Autowired
+    private IGoodsService managerService;
+
+    //主页面
+    @RequestMapping("/mainPage")
     public ModelAndView mainPage(Integer id){
         logger.info("主页面:id="+id);
         ModelAndView mv = new ModelAndView();
-        mv.addObject("userName", redisUtil.get("u"+id));
-        mv.setViewName("customer/c_main");
-        return mv; //请求转发到页面，访问一个名为hello的前端页面
+        mv.addObject("mName", redisUtil.get("m"+id));
+        mv.setViewName("business/b_main");
+        return mv;
     }
+
+
 
 }

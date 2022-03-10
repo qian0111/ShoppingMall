@@ -28,41 +28,6 @@ public class GoodsController extends BaseController {
     @Autowired
     private IGoodsService managerService;
 
-    //跳转至登录页
-    @RequestMapping("/loginPage")
-    public ModelAndView loginPage(){
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("business/b_login");
-        return mv;
-    }
-
-    //登录检查
-    @RequestMapping("/loginCheck")
-    public JSONObject loginCheck(Manager manager){
-        //MD5加密
-        manager.setmPass(MD5Util.encode(manager.getmPass()));
-        logger.info("管理员登录验证：" + (manager.getmName() + "," + manager.getmPass()));
-        Manager m = managerService.loginCheck(manager);
-        if(m == null){
-            return resJson(0, "fail", null);
-        }
-        //添加到redis
-        Integer res = redisUtil.set("m"+m.getId(), m.getmName());
-        logger.info("添加redis缓存，状态码：" + res);
-
-        return resJson(1, "success", m);
-    }
-
-    //主页面
-    @RequestMapping("/mainPage")
-    public ModelAndView mainPage(Integer id){
-        logger.info("主页面:id="+id);
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("mName", redisUtil.get("m"+id));
-        mv.setViewName("business/b_main");
-        return mv;
-    }
-
     //跳转至商品列表页
     @RequestMapping("/onGoodsListPage")
     public ModelAndView onGoodsListPage(Integer pageNo, Integer pageCount, String gName,
@@ -73,6 +38,8 @@ public class GoodsController extends BaseController {
             pageNo = 1;
             pageCount = 6;
         }
+        logger.info("商品列表页     查询信息: (商品名：" + gName + "，商品一级分类："
+                +parentCategory +"，商品二级分类："+ categoryNow +")");
         //处理参数
         Goods goods = new Goods();
         if (gName != null) {
@@ -136,6 +103,7 @@ public class GoodsController extends BaseController {
     @RequestMapping("upGoodsInfo")
     public ModelAndView upGoodsInfo(Integer id){
         ModelAndView mv = new ModelAndView();
+        logger.info("打开更新弹窗");
         Goods g = new Goods();
         g.setId(id);
         Goods goods = managerService.goods(g).get(0);
@@ -147,6 +115,9 @@ public class GoodsController extends BaseController {
     //提交更新信息
     @RequestMapping("upGoods")
     public JSONObject upGoods(Goods goods){
+        logger.info("更新信息: (商品名：" + goods.getgName()+
+                "，商品数量："+ goods.getgCount() + "，商品单价：" + goods.getgPrice() +
+                "，商品一级分类：" + goods.getParentId() +"，商品二级分类："+ goods.getcId() +")");
         //获取是否更新成功
         int row = managerService.upGoods(goods);
         return resJson(row,"success",null);
@@ -156,6 +127,7 @@ public class GoodsController extends BaseController {
     @RequestMapping("onGoodsPage")
     public ModelAndView onGoodsPage(){
         ModelAndView mv = new ModelAndView();
+        logger.info("添加新商品");
         mv.setViewName("business/goods/b_onGoods");
         return mv;
     }
@@ -164,6 +136,9 @@ public class GoodsController extends BaseController {
     @RequestMapping("onGoods")
     public JSONObject onGoods(Goods goods){
         //获取是否更新成功
+        logger.info("新商品信息: (商品名：" + goods.getgName()+
+                "，商品数量："+ goods.getgCount() + "，商品单价：" + goods.getgPrice() +
+                "，商品一级分类：" + goods.getParentId() +"，商品二级分类："+ goods.getcId() +")");
         int row = managerService.onGoods(goods);
         return resJson(row,"success",null);
     }
@@ -172,15 +147,18 @@ public class GoodsController extends BaseController {
     @RequestMapping("offGoods")
     public JSONObject offGoods(String[] arr){
         //产品下架
+        logger.info("下架商品：" + arr.toString());
         int row = managerService.offGoods(arr);
         return resJson(row,"success",null);
     }
 
-    //跳转至商品列表页
+    //跳转至下架商品列表页
     @RequestMapping("/offGoodsListPage")
     public ModelAndView offGoodsListPage(Integer pageNo, Integer pageCount, String gName,
                                         Integer parentCategory, Integer categoryNow){
         ModelAndView mv = new ModelAndView();
+        logger.info("下架商品页     查询信息: (商品名：" + gName + "，商品一级分类："
+                +parentCategory +"，商品二级分类："+ categoryNow +")");
         //当没有传页码时，默认第1页
         if(pageNo == null) {
             pageNo = 1;
@@ -226,12 +204,12 @@ public class GoodsController extends BaseController {
         return mv;
     }
 
-    //下架商品
+    //上架商品
     @RequestMapping("reOnGoods")
     public JSONObject reOnGoods(String[] arr){
-        //产品下架
+        //产品上架
+        logger.info("上架商品：" + arr.toString());
         int row = managerService.reOnGoods(arr);
         return resJson(row,"success",null);
     }
-
 }

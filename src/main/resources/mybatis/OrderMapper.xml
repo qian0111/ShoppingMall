@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qian.dao.manager.IOrderDao"><!--namespace属性关联dao层-->
+<mapper namespace="com.qian.dao.IOrderDao"><!--namespace属性关联dao层-->
 
     <!--orm 对象和数据表之间的映射关系-->
     <resultMap id="baseMap" type="com.qian.model.manager.Order">
@@ -25,26 +25,40 @@
     -->
     <select id="query" parameterType="com.qian.model.manager.Order" resultMap="baseMap">
         <!-- #{} 会自动在变量前后拼一个英文单引号-->
-        SELECT *
-        FROM order_info
-        <where> <!-- where标签会把标签中的第一条if语句中的and去掉-->
-            <if test="orderNo != null ">     AND order_no LIKE concat('%',#{orderNo},'%')</if>
-            <if test="orderStatus != null "> AND order_status = #{orderStatus} </if>
+        SELECT * FROM(
+            SELECT * FROM order_info
+            <where><!-- where标签会把标签中的第一条if语句中的and去掉-->
+                <if test="orderStatus != null "> AND order_status = #{orderStatus} </if>
+                <if test="orderStatus2 != null "> OR order_status = #{orderStatus2} </if>
+            </where>
+        ) as a
+        <where>
+            <if test="orderNo != null ">     AND a.order_no LIKE concat('%',#{orderNo},'%')</if>
         </where>
         <if test="pageNo != null and pageCount != null">LIMIT #{pageNo}, #{pageCount}</if>
     </select>
 
     <select id="countOrder" parameterType="com.qian.model.manager.Order"  resultType="java.lang.Long">
         <!-- #{} 会自动在变量前后拼一个英文单引号-->
-        SELECT COUNT(*) FROM order_info
-        <where> <!-- where标签会把标签中的第一条if语句中的and去掉-->
-            <if test="orderNo != null ">     AND order_no LIKE concat('%',#{orderNo},'%')</if>
-            <if test="orderStatus != null "> AND order_status = #{orderStatus} </if>
+        SELECT COUNT(*) FROM(
+            SELECT * FROM order_info
+            <where><!-- where标签会把标签中的第一条if语句中的and去掉-->
+                <if test="orderStatus != null "> AND order_status = #{orderStatus} </if>
+                <if test="orderStatus2 != null "> OR order_status = #{orderStatus2} </if>
+            </where>
+        ) as a
+        <where>
+            <if test="orderNo != null ">     AND a.order_no LIKE concat('%',#{orderNo},'%')</if>
         </where>
+        <if test="pageNo != null and pageCount != null">LIMIT #{pageNo}, #{pageCount}</if>
     </select>
 
     <update id="refond" parameterType="java.lang.String">
         update order_info set order_status=5 where order_no = #{orderNo}
+    </update>
+
+    <update id="deliver" parameterType="java.lang.String">
+        update order_info set order_status=2 where order_no = #{orderNo}
     </update>
 
 </mapper>

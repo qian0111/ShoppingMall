@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qian.dao.manager.IManagerDao"><!--namespace属性关联dao层-->
+<mapper namespace="com.qian.dao.IManagerDao"><!--namespace属性关联dao层-->
 
     <!--orm 对象和数据表之间的映射关系-->
     <resultMap id="baseMap" type="com.qian.model.manager.Manager">

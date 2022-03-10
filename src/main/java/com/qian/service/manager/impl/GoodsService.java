@@ -1,7 +1,7 @@
 package com.qian.service.manager.impl;
 
-import com.qian.dao.manager.IGoodsDao;
-import com.qian.dao.manager.IManagerDao;
+import com.qian.dao.IGoodsDao;
+import com.qian.dao.IManagerDao;
 import com.qian.model.manager.Goods;
 import com.qian.model.manager.Manager;
 import com.qian.service.manager.IGoodsService;

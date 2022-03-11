@@ -17,4 +17,15 @@ public class BaseController {
 
         return json;
     }
+
+    public JSONObject resJson(Integer buyCount, Integer gId, Integer uId){
+        JSONObject json = new JSONObject();
+        json.put("buyCount", buyCount);
+        json.put("gId", gId);
+        json.put("uId", uId);
+
+        logger.info(json.toJSONString());
+
+        return json;
+    }
 }

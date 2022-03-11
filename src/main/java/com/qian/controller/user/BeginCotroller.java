@@ -50,7 +50,7 @@ public class BeginCotroller extends BaseController {
         //添加到redis
         Integer res = redisUtil.set("u"+u.getId(), u.getUserName());
         logger.info("添加redis缓存，状态码：" + res);
-
+        userService.recommend();
         return resJson(1, "success", u);
     }
 
@@ -75,6 +75,7 @@ public class BeginCotroller extends BaseController {
         //添加到redis
         Integer res = redisUtil.set("u"+id, user.getUserName());
         logger.info("添加redis缓存，状态码：" + res);
+        userService.recommend();
         return resJson(1, "success", id);
 
     }

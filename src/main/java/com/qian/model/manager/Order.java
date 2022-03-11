@@ -1,14 +1,18 @@
 package com.qian.model.manager;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 public class Order {
     private String orderNo;//订单号
     private Integer uId;//用户id
     private Integer gId;//商品id
     private String gName;//商品名称
+    private String gImage;//商品图片
     private BigDecimal gPrice;//商品价格
+    private BigDecimal price;//商品总价
     private Integer buyCount;//购买数量
+    private Timestamp updateTime;//更新时间
     private BigDecimal payMoney;//支付金额
     private Integer orderStatus;//订单状态
     private Integer pageNo;//分页：第n页
@@ -18,6 +22,30 @@ public class Order {
     private String statusName;//解释状态码
 
     public Order() {
+    }
+
+    public Timestamp getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getgImage() {
+        return gImage;
+    }
+
+    public void setgImage(String gImage) {
+        this.gImage = gImage;
     }
 
     public String getStatusName() {

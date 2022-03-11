@@ -17,6 +17,7 @@
         <result column="buy_count"    property="buyCount"    jdbcType="INTEGER"/>
         <result column="pay_money"    property="payMoney"    jdbcType="DECIMAL"/>
         <result column="order_status" property="orderStatus" jdbcType="INTEGER"/>
+        <result column="update_time"  property="updateTime"  jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <!--
@@ -60,5 +61,36 @@
     <update id="deliver" parameterType="java.lang.String">
         update order_info set order_status=2 where order_no = #{orderNo}
     </update>
+
+    <insert id="insert" parameterType="com.qian.model.manager.Order"  useGeneratedKeys="true" keyProperty="orderNo">
+        insert into order_info
+        <!--
+        prefix 前缀
+        suffix 后缀
+        suffixOverrides 去除拼接语句中的最后一个逗号
+        -->
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null ">     order_no, </if>
+            <if test="uId != null ">         u_id, </if>
+            <if test="gId != null ">         g_id, </if>
+            <if test="gName != null ">       g_name, </if>
+            <if test="gPrice != null ">      g_price, </if>
+            <if test="buyCount != null ">    buy_count, </if>
+            <if test="payMoney != null ">    pay_money, </if>
+            <if test="orderStatus != null "> order_status, </if>
+            <if test="updateTime != null "> update_time, </if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null ">     #{orderNo}, </if>
+            <if test="uId != null ">         #{uId}, </if>
+            <if test="gId != null ">         #{gId}, </if>
+            <if test="gName != null ">       #{gName}, </if>
+            <if test="gPrice != null ">      #{gPrice}, </if>
+            <if test="buyCount != null ">    #{buyCount}, </if>
+            <if test="payMoney != null ">    #{payMoney}, </if>
+            <if test="orderStatus != null "> #{orderStatus}, </if>
+            <if test="updateTime != null ">  #{updateTime}, </if>
+        </trim>
+    </insert>
 
 </mapper>

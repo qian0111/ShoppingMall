@@ -15,4 +15,6 @@ public interface IOrderDao {
     public int refond(String orderNo);
     //发货
     public int deliver(String orderNo);
+    //创建订单
+    public String insert(Order order);
 }

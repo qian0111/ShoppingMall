@@ -95,7 +95,7 @@
     </update>
 
     <update id="offGoods" parameterType="java.lang.Integer">
-        update goods_info set g_status=0 where id = #{id}
+        update goods_info set g_status=2 where id = #{id}
     </update>
 
     <update id="reOnGoods" parameterType="java.lang.Integer">
@@ -128,6 +128,10 @@
             1,
         </trim>
     </insert>
+
+    <update id="subCount" parameterType="com.qian.model.manager.Goods">
+        update goods_info set g_count=#{gCount} where id = #{id}
+    </update>
 </mapper>
 
 

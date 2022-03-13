@@ -17,4 +17,6 @@ public interface IUserDao {
     public List<User> query(User user);
     //添加新用户
     public int add(User user);
+    //扣减余额
+    public int subMoney(User user);
 }

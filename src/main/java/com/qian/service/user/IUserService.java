@@ -18,5 +18,7 @@ public interface IUserService {
     public Order preOrder(Integer buyCount, Integer gId, Integer uId);
     //创建订单
     public JSONObject generateOrder(Integer buyCount, Integer gId, Integer uId);
+    //支付
+    public JSONObject afterPay(String userPass, String orderNo, Integer uId);
 
 }

@@ -107,4 +107,23 @@ public class UserController extends BaseController{
         return json.getString("obj");
     }
 
+    //支付
+    @RequestMapping("/afterPay")
+    public JSONObject afterPay(String userPass, String orderNo, Integer uId){
+        JSONObject json = userService.afterPay(userPass, orderNo, uId);
+        return json;
+    }
+
+    //订单页
+    @RequestMapping("/orderPage")
+    public ModelAndView orderPage(Integer uId){
+        ModelAndView mv = new ModelAndView();
+        //用户名
+        mv.addObject("userName", redisUtil.get("u"+uId));
+        mv.addObject("uId",uId);
+        logger.info("订单页：");
+        mv.setViewName("customer/c_order");
+        return mv;
+    }
+
 }

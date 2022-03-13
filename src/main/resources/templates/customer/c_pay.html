@@ -34,6 +34,12 @@
 			width: 480px;
 			height: 320px;
 		}
+		 body .demo-class .layui-layer-btn0{
+			 border-color: #de5e55;
+			 background-color: #de5e55;
+			 color: rgb(255, 255, 255);
+			 height: 30px;
+		 }
 	</style>
 </head>
 <body>
@@ -99,8 +105,16 @@
 						<button type="button" class="btn btn-danger" onclick="payNow()">立即支付</button>
 					</div>
 				</div>
+				<div class="row clearfix" id="worning" style="padding-top: 160px;">
+					<div class="col-md-12 column">
+						<div class="alert alert-danger fade in alert-dismissable">
+							<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+							<strong>下单失败！</strong> 商品库存可能已经不充足，请联系商家确认
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>	
+		</div>
 	</div>
 </body>
 <script src="/sm/static/js/jquery-1.9.1.min.js"></script>
@@ -129,11 +143,13 @@
 <script src="/sm/static/js/scripts.js"></script>
 <script src="/sm/static/layui/layui.js"></script>
 <script>
+	$("#worning").hide();
 	layui.use('layer', function(){
 		var layer = layui.layer;
 	});
 	function payNow(){
 		layer.open({
+			skin: 'demo-class',
 			type: 2,
 			area: ['300px', '180px'],
 			content: "passPage",
@@ -142,66 +158,46 @@
 			yes: function(index){
 				//获取弹层返回值
 				var res = window["layui-layer-iframe" + index].callbackdata();
-				console.info(res);
+				var orderNo;
 				//调用下单方法
 				$.ajax({
-					url:'',
+					url:'generateOrder',
 					data:{"buyCount":[[${order.buyCount}]], "gId":[[${order.gId}]], "uId":[[${order.uId}]]},
 					type:"POST",
 					success:function(str){//请求成功之后的回调函数，接收服务端响应的数据
-						if(str.code == 1){
-							$("#loginButton").text("正在跳转...");
-							setTimeout(
-									function(){
-										window.location.href="/sm/m/buy/mainPage?id="+str.obj.id;
-									}
-									,100
-							);
+						if(str === "0"){
+							$("#worning").show()
+							//库存不足，关闭弹窗
+							layer.close(index);
 						} else {
-							alert("登录失败");
-							$("#userName").val("");
-							$("#userName").attr("placeholder","请输入用户名");
-							$("#userPass").val("");
-							$("#userPass").attr("placeholder","请输入密码");
+							orderNo = str;
 						}
 					},
 					error:function(){//请求失败之后的回调函数
 
 					}
 				});
-				var pay_res = pay(res);
+				var pay_res = pay(res, orderNo);
 				if(pay_res == 1){
-					//下单成功，跳转到我的订单页
-
+					//支付成功，跳转到我的订单页
+					window.location.href = "orderPage?id="+[[${uId}]];
 				} else {
-					//下单失败，关闭支付密码弹出层
+					//支付失败，关闭支付密码弹出层
+					$("#worning").show()
 					layer.close(index);
 				}
-			},
-			cancel: function(){
-				//右上角关闭回调
-
 			}
 		});
 	}
-	function pay(pass){
-		var goodsId  = $("#g_id").val();
-		var buyCount = $("#buyCount").val();
-		var payMoney = $("#payMoney").val();
-
-		//去除逗号，如：2,300
-		buyCount = buyCount.replace(",", "");
-		payMoney = payMoney.replace(",", "");
-
-		//向服务端发送下单请求
+	function pay(userPass, orderNo){
+		//向服务端发送支付请求
 		$.ajax({
-			url: "/shop/mall/goods/afterPay",
-			data: {"pass":pass, "payMoney":payMoney, "buyCount":buyCount, "goodsId":goodsId},
+			url: "afterPay",
+			data: {"userPass":userPass, "uId":[[${order.uId}]], "orderNo":orderNo},
 			dataType: "json",
 			type: "post",
 			async: false,
 			success:function(res){
-				alert(res.msg);
 				return res.code;
 			}
 		});

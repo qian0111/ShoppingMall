@@ -23,6 +23,10 @@
         update user_info set money=#{payMoney} where id = #{uId}
     </update>
 
+    <update id="subMoney" parameterType="com.qian.model.user.User">
+        update user_info set money=#{money} where id = #{id}
+    </update>
+
     <select id="query" parameterType="com.qian.model.user.User" resultMap="baseMap">
         <!-- #{} 会自动在变量前后拼一个英文单引号-->
         SELECT * FROM user_info

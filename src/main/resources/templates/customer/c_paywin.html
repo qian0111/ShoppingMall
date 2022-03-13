@@ -1,26 +1,25 @@
-<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
 		<title>输入支付密码弹框</title>
-		<link rel="stylesheet" type="text/css" href="../static/layui/css/layui.css">
+		<link rel="stylesheet" type="text/css" href="/sm/static/layui/css/layui.css">
+		<script src="/sm/static/js/jquery-1.9.1.min.js"></script>
+		<script src="/sm/static/layui/layui.js"></script>
 	</head>
 	<body>
-		<div style="margin: 0 auto; padding: 10px;">
+		<div style="margin: 0 auto; padding-right: 5px;">
 			<div>
-				<input type="password" value="" placeholder="请输入支付密码" class="layui-input" id="pass"/>
+				<input type="password" style="width: 100%;height: 30px" placeholder="请输入支付密码" class="layui-input" id="userPass"/>
 			</div>
 			<!--<div style="margin-top: 20px;">
 				<button class="layui-btn layui-btn-fluid layui-bg-red">支付</button>
 			</div>-->
 		</div>
 	</body>
-<script src="../static/js/jquery-1.9.1.min.js"></script>
-<script src="../static/layui/layui.js"></script>
 <script>
 	var callbackdata = function () {
-		var pass = $("#pass").val();
-		return pass;
+		var userPass = $("#userPass").val();
+		return userPass;
 	}
 </script>
 </html>

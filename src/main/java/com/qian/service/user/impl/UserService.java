@@ -5,9 +5,11 @@ import com.qian.config.RedisUtil;
 import com.qian.controller.manager.GoodsController;
 import com.qian.dao.IGoodsDao;
 import com.qian.dao.IOrderDao;
+import com.qian.dao.ITradeDao;
 import com.qian.dao.IUserDao;
 import com.qian.model.manager.Goods;
 import com.qian.model.manager.Order;
+import com.qian.model.user.Trade;
 import com.qian.model.user.User;
 import com.qian.service.user.IUserService;
 import com.qian.util.MD5Util;
@@ -19,11 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService implements IUserService {
@@ -35,6 +36,8 @@ public class UserService implements IUserService {
     private IGoodsDao goodsDao;
     @Autowired
     private IOrderDao orderDao;
+    @Autowired
+    private ITradeDao tradeDao;
     @Autowired
     private RedisUtil redisUtil;
 
@@ -96,8 +99,7 @@ public class UserService implements IUserService {
     }
 
 
-    @Override
-    @Transactional
+
     /*
     开启事务
     下订单：
@@ -106,6 +108,8 @@ public class UserService implements IUserService {
     3生成订单号 日期+MD5(uId)前五位
     4创建订单，状态码为0（未支付）
      */
+    @Override
+    @Transactional
     public JSONObject generateOrder(Integer buyCount, Integer gId, Integer uId) {
         //获得商品信息
         Goods g = new Goods();
@@ -121,20 +125,70 @@ public class UserService implements IUserService {
         //扣减库存
         goods.setgCount(goods.getgCount()-order.getBuyCount());
         int row = goodsDao.subCount(goods);
-        if(row == 0){
-            logger.info("数据库未执行");
-            return resJson(0,"数据库未执行",null);
-        }
         //生成订单号
         SimpleDateFormat df = new SimpleDateFormat("yyMMddHHmmsss");//设置日期格式
         String date = df.format(new Date());
-        String suffix = MD5Util.encode(uId.toString()).substring(5);
+        String suffixMD5 = MD5Util.encode(uId.toString());
+        String REGEX = "[^(0-9)]";
+        String suffix = Pattern.compile(REGEX).matcher(suffixMD5).replaceAll("").trim().substring(0,5);
         String orderNo = date + suffix;
         order.setOrderNo(orderNo);
         order.setOrderStatus(0);//0-创建订单 未支付
        //创建订单
         String no = orderDao.insert(order);
         return resJson(1,"创建成功",no);
+    }
+
+    /*
+    开启事务
+    支付
+    1验证密码
+    2验证余额
+    3扣减余额
+    4修改状态 1-已支付待发货
+    5生成交易流水 1-支付
+     */
+    @Transactional
+    @Override
+    public JSONObject afterPay(String userPass, String orderNo, Integer uId) {
+        //验证支付密码
+        userPass = MD5Util.encode(userPass);
+        User u = new User();
+        u.setId(uId);
+        User user = userDao.query(u).get(0);
+        if(!user.getUserPass().equals(userPass)){
+            logger.info("密码错误");
+            return resJson(0,"密码错误",orderNo);
+        }
+        //验证余额
+        Order o = new Order();
+        o.setOrderNo(orderNo);
+        Order order = orderDao.query(o).get(0);
+        if(user.getMoney().compareTo(order.getPrice()) == -1){
+            logger.info("余额不足");
+            return resJson(2,"余额不足",orderNo);
+        }
+        //扣减余额
+        user.setMoney(user.getMoney().subtract(order.getPrice()));
+        int row = userDao.subMoney(user);
+        if(row != 0){
+            logger.info("余额已扣减");
+        }
+        //修改状态 1-已支付待发货
+        Timestamp updateTime = new Timestamp(System.currentTimeMillis());
+        order.setUpdateTime(updateTime);
+        int row2 = orderDao.afterPay(order);
+        if(row2 != 0){
+            logger.info("状态已修改：1-已支付未发货");
+        }
+        //生成交易流水
+        Trade trade = new Trade();
+        trade.setUId(uId);
+        trade.setTradeType(1);
+        trade.setTradeMoney(user.getMoney());
+        trade.setOrderNo(orderNo);
+        int row3 = tradeDao.insert(trade);
+        return resJson(1,"下单成功",null);
     }
 
     public JSONObject resJson(Integer code, String msg, Object obj){

@@ -10,9 +10,9 @@ public class Order {
     private String gName;//商品名称
     private String gImage;//商品图片
     private BigDecimal gPrice;//商品价格
-    private BigDecimal price;//商品总价
     private Integer buyCount;//购买数量
     private Timestamp updateTime;//更新时间
+    private Timestamp createTime;//更新时间
     private BigDecimal payMoney;//支付金额
     private Integer orderStatus;//订单状态
     private Integer pageNo;//分页：第n页
@@ -24,20 +24,20 @@ public class Order {
     public Order() {
     }
 
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
     public Timestamp getUpdateTime() {
         return updateTime;
     }
 
     public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 
     public String getgImage() {

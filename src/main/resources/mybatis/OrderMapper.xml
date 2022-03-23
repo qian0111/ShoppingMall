@@ -18,6 +18,7 @@
         <result column="pay_money"    property="payMoney"    jdbcType="DECIMAL"/>
         <result column="order_status" property="orderStatus" jdbcType="INTEGER"/>
         <result column="update_time"  property="updateTime"  jdbcType="TIMESTAMP"/>
+        <result column="create_time"   property="createTime"   jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <!--
@@ -34,8 +35,11 @@
             </where>
         ) as a
         <where>
-            <if test="orderNo != null ">     AND a.order_no LIKE concat('%',#{orderNo},'%')</if>
+            <if test="orderNo != null ">  AND a.order_no LIKE concat('%',#{orderNo},'%')</if>
+            <if test="uId != null ">      AND a.u_id = #{uId}</if>
+            <if test="gName != null ">    AND a.g_name LIKE concat('%',#{gName},'%')</if>
         </where>
+        ORDER BY create_time DESC
         <if test="pageNo != null and pageCount != null">LIMIT #{pageNo}, #{pageCount}</if>
     </select>
 
@@ -49,9 +53,10 @@
             </where>
         ) as a
         <where>
-            <if test="orderNo != null ">     AND a.order_no LIKE concat('%',#{orderNo},'%')</if>
+            <if test="orderNo != null ">  AND a.order_no LIKE concat('%',#{orderNo},'%')</if>
+            <if test="uId != null ">      AND a.u_id = #{uId}</if>
+            <if test="gName != null ">    AND a.g_name LIKE concat('%',#{gName},'%')</if>
         </where>
-        <if test="pageNo != null and pageCount != null">LIMIT #{pageNo}, #{pageCount}</if>
     </select>
 
     <update id="refond" parameterType="java.lang.String">

@@ -1,9 +1,12 @@
 package com.qian.service.manager.impl;
 
+import com.qian.dao.IGoodsDao;
 import com.qian.dao.IOrderDao;
 import com.qian.dao.IUserDao;
+import com.qian.model.manager.Goods;
 import com.qian.model.manager.Order;
 import com.qian.service.manager.IOrderService;
+import com.qian.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,17 +22,39 @@ public class OrderService implements IOrderService {
     @Autowired
     private IUserDao userDao;
 
+    @Autowired
+    private IGoodsDao goodsDao;
+
+    @Autowired
+    private IUserService userService;
+
     @Override
     public List<Order> orderList(Order order) {
         order.setPageNo((order.getPageNo()-1) * order.getPageCount());
         List<Order> orderList = orderDao.query(order);
         for(Order o : orderList){
+            if(o.getOrderStatus() == 0){
+                o.setStatusName("待支付");
+            }
+            if(o.getOrderStatus() == 1){
+                o.setStatusName("待发货");
+            }
+            if(o.getOrderStatus() == 2){
+                o.setStatusName("待签收");
+            }
             if(o.getOrderStatus() == 3){
                 o.setStatusName("已签收");
+            }
+            if(o.getOrderStatus() == 4){
+                o.setStatusName("待退款");
             }
             if(o.getOrderStatus() == 5){
                 o.setStatusName("已退款");
             }
+            Goods g = new Goods();
+            g.setId(order.getgId());
+            Goods goods = goodsDao.query(g).get(0);
+            o.setgImage(goods.getgImage());
         }
         return orderList;
     }

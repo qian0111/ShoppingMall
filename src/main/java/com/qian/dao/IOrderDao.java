@@ -16,7 +16,7 @@ public interface IOrderDao {
     //发货
     public int deliver(String orderNo);
     //创建订单
-    public String insert(Order order);
+    public Integer insert(Order order);
     //支付
     public int afterPay(Order order);
 }

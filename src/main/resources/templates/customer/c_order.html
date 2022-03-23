@@ -51,8 +51,8 @@
 					<div class="pull-right p-r-15">
 						<ul>
 							<li class="header-icon dib input-group input-group-default">
-								<input type="text" placeholder="请输入内容" name="Search" class="form-control " style="height: 30px; width: 300px;">
-								<i class="ti-search" style="padding-left: 12px;" onclick=""></i>
+								<input id="gName" type="text" th:value="${gName}" placeholder="查找购买过的商品" name="Search" class="form-control " style="height: 30px; width: 300px;">
+								<i class="ti-search" style="padding-left: 12px;" onclick="search()"></i>
 							</li>
 							<span class="header-icon dib" style="width: 50px;"></span>
 							<li class="header-icon dib">
@@ -73,119 +73,52 @@
 				</div>
 			</div>
 		</div>
-		<div class="row clearfix" style="width: 97%; padding-top:100px; padding-left: 60px;">
+		<div class="row clearfix" style="padding-top:30px;background-color: white;position:relative;z-index: -1">
 			<div class="col-md-12 column">
 				<div class="row clearfix">
-					<div class="col-md-12 column">
+					<div class="col-md-12 column"  th:each="order:${orderList}">
 						<div class="row clearfix">
 							<div class="col-md-12 column">
-								<h1 style="padding-bottom: 15px;">
-									<span style="font-size: 15px;">日期：2022-2-22 </span>
+								<h1 style="padding-bottom: 10px;">
+									<span style="font-size: 15px;" th:text="'时间：'+${order.createTime}"></span>
 									<span style="padding-left: 30px;"></span>
-									<span style="font-size: 15px;">订单号：20220222224930123</span>
+									<span style="font-size: 15px;" th:text="'订单号：'+${order.orderNo}"></span>
 									<br>
 								</h1>
 							</div>
 						</div>
 						<div class="row clearfix">
 							<div class="col-md-3 column">
-								<img class="myabsolute" alt="140x140" src="img/t.jpg" />
+								<img class="myabsolute" th:src="@{/static/images/}+${order.gImage}" />
 							</div>
 							<div class="col-md-9 column">
-								<div style="height: 100px;">
-									<h1 style="font-size: 20px;">这里是商品名称,很长的一段描述，但是下市场的绝对v啊大哥v啊大哥v阿哥都v哦啊度过v啊大哥v阿杜v哦啊</h1>			
+								<div style="height: 30px;">
+									<h1 style="font-size: 20px;color: rgba(12,12,12,0.89);" th:text="${order.gName}"></h1>
 								</div>
-								<h1 style="padding-bottom: 10px;">
-									<span style="font-size: 18px">单价：</span>
-									<span style="font-size: 18px;">170￥</span>
-									<span style="font-size: 18px;padding-left: 50px;">购买数量：</span>
-									<span style="font-size: 18px;">1</span>
-									<span style="font-size: 18px;padding-left: 50px;">总价：</span>
-									<span style="font-size: 18px; color: red;">170￥</span>
-									<span style="padding-left: 260px;">
-										<span class="label label-danger" style="font-size: 16px; font-weight: 400;">待发货</span>
-									</span>						
-								</h1>									
-							</div>
-						</div>
-						<br>
-					</div>
-				</div>	
-				<hr>
-				<div class="row clearfix">
-					<div class="col-md-12 column">
-						<div class="row clearfix">
-							<div class="col-md-12 column">
-								<h1 style="padding-bottom: 15px;">
-									<span style="font-size: 15px;">日期：2022-2-22 </span>
-									<span style="padding-left: 30px;"></span>
-									<span style="font-size: 15px;">订单号：20220222224930123</span>
-									<br>
-								</h1>
-							</div>
-						</div>
-						<div class="row clearfix">
-							<div class="col-md-3 column">
-								<img class="myabsolute" alt="140x140" src="img/t.jpg" />
-							</div>
-							<div class="col-md-9 column">
-								<div style="height: 100px;">
-									<h1 style="font-size: 20px;">这里是商品名称,很长的一段描述，但是下市场的绝对v啊大哥v啊大哥v阿哥都v哦啊度过v啊大哥v阿杜v哦啊</h1>			
-								</div>
-								<h1 style="padding-bottom: 10px;">
-									<span style="font-size: 18px">单价：</span>
-									<span style="font-size: 18px;">170￥</span>
-									<span style="font-size: 18px;padding-left: 50px;">购买数量：</span>
-									<span style="font-size: 18px;">1</span>
-									<span style="font-size: 18px;padding-left: 50px;">总价：</span>
-									<span style="font-size: 18px; color: red;">170￥</span>
-									<span style="padding-left: 260px;">
-										<span class="label label-danger" style="font-size: 16px; font-weight: 400;">待发货</span>
+								<h1>
+									<span style="font-size: 18px;color: rgba(12,12,12,0.89);" >单价：</span>
+									<span style="font-size: 18px;color: rgba(12,12,12,0.89);" th:text="${order.gPrice}+'￥'"></span>
+									<span style="font-size: 18px;color: rgba(12,12,12,0.89);padding-left: 50px;">购买数量：</span>
+									<span style="font-size: 18px;color: rgba(12,12,12,0.89);"th:text="${order.buyCount}"></span>
+									<span style="font-size: 18px;color: rgba(12,12,12,0.89);padding-left: 50px;">总价：</span>
+									<span style="font-size: 18px; color: red;"th:text="${order.payMoney}+'￥'"></span>
+									<span style="padding-left: 60px;">
+										<span class="label label-default" style="font-size: 16px; font-weight: 400;" th:text="${order.statusName}" th:value="${order.orderStatus}"></span>
+										<span style="padding-left: 100px"></span>
+										<span th:if="${order.orderStatus eq 0}" class="label label-danger" style="font-size: 16px; font-weight: 400;">立即支付</span>
+										<span th:if="${order.orderStatus eq 1}" class="label label-danger" style="font-size: 16px; font-weight: 400;">申请退货</span>
+										<span th:if="${order.orderStatus eq 2}" class="label label-danger" style="font-size: 16px; font-weight: 400;">立即签收</span>
+										<span th:if="${order.orderStatus eq 3}" class="label label-danger" style="font-size: 16px; font-weight: 400;">申请退货</span>
 									</span>						
 								</h1>									
 							</div>
 						</div>
 					</div>
 				</div>
-				<hr>
-				<div class="row clearfix">
-					<div class="col-md-12 column">
-						<div class="row clearfix">
-							<div class="col-md-12 column">
-								<h1 style="padding-bottom: 15px;">
-									<span style="font-size: 15px;">日期：2022-2-22 </span>
-									<span style="padding-left: 30px;"></span>
-									<span style="font-size: 15px;">订单号：20220222224930123</span>
-									<br>
-								</h1>
-							</div>
-						</div>
-						<div class="row clearfix">
-							<div class="col-md-3 column">
-								<img class="myabsolute" alt="140x140" src="img/t.jpg" />
-							</div>
-							<div class="col-md-9 column">
-								<div style="height: 100px;">
-									<h1 style="font-size: 20px;">这里是商品名称,很长的一段描述，但是下市场的绝对v啊大哥v啊大哥v阿哥都v哦啊度过v啊大哥v阿杜v哦啊</h1>			
-								</div>
-								<h1 style="padding-bottom: 10px;">
-									<span style="font-size: 18px">单价：</span>
-									<span style="font-size: 18px;">170￥</span>
-									<span style="font-size: 18px;padding-left: 50px;">购买数量：</span>
-									<span style="font-size: 18px;">1</span>
-									<span style="font-size: 18px;padding-left: 50px;">总价：</span>
-									<span style="font-size: 18px; color: red;">170￥</span>
-									<span style="padding-left: 260px;">
-										<span class="label label-danger" style="font-size: 16px; font-weight: 400;">待发货</span>
-									</span>						
-								</h1>									
-							</div>
-						</div>
-					</div>
-				</div>
-				<hr>
 			</div>
-		</div>	
+			<hr>
+		</div>
+		<div id="lp" align="center"></div>
 	</div>
 </body>
 <script src="/sm/static/js/jquery-1.9.1.min.js"></script>
@@ -213,4 +146,39 @@
 <!-- // Datamap -->
 <script src="/sm/static/js/scripts.js"></script>
 <script src="/sm/static/layui/layui.js"></script>
+<script type="text/javascript" th:inline="javascript">
+	//加载模块（组件）
+	layui.use(['layer','laypage'], function(){
+		//创建弹出层对象
+		var layer = layui.layer;
+		//创建分页对象
+		var laypage = layui.laypage;
+		//执行一个laypage实例
+		laypage.render({
+			elem: 'lp' //注意，这里的lp是id，不用加#号
+			,count: [[${totalCount}]] //数据总数，从服务端得到
+			,limit: [[${pageCount}]] //每页显示的条数，laypage将会借助 count 和 limit 计算出分页数。
+			,curr: [[${pageNo}]]//起始页码
+			,jump: function(obj, first){
+				var pageNo = obj.curr;
+				var pageCount = obj.limit;
+				var url = "orderPage?pageNo=" + pageNo;
+				url += "&pageCount="+ pageCount;
+				url += "&uId="+[[${uId}]];
+				url += "&gName="+$("#gName").val();
+				console.info(url);
+				//首次不执行
+				if(!first){
+					window.location.href = url;
+					//ajax仅能用于前后端数据交互，不能用于页面跳转
+				}
+			}
+		});
+	});
+	function search(){
+		var gName = $("#gName").val();
+		console.info(gName);
+		window.location.href = "orderPage?&uId="+[[${uId}]] +"&gName="+gName;
+	}
+</script>
 </html>

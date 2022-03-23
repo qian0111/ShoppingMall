@@ -16,7 +16,6 @@ import com.qian.util.MD5Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,11 +93,9 @@ public class UserService implements IUserService {
         order.setBuyCount(buyCount);
         //计算商品总价
         BigDecimal price = goods.getgPrice().multiply(BigDecimal.valueOf(buyCount));
-        order.setPrice(price);
+        order.setPayMoney(price);
         return order;
     }
-
-
 
     /*
     开启事务
@@ -128,15 +125,15 @@ public class UserService implements IUserService {
         //生成订单号
         SimpleDateFormat df = new SimpleDateFormat("yyMMddHHmmsss");//设置日期格式
         String date = df.format(new Date());
-        String suffixMD5 = MD5Util.encode(uId.toString());
+        String suffixMD5 = MD5Util.encode(uId.toString()+gId.toString());
         String REGEX = "[^(0-9)]";
         String suffix = Pattern.compile(REGEX).matcher(suffixMD5).replaceAll("").trim().substring(0,5);
         String orderNo = date + suffix;
         order.setOrderNo(orderNo);
         order.setOrderStatus(0);//0-创建订单 未支付
        //创建订单
-        String no = orderDao.insert(order);
-        return resJson(1,"创建成功",no);
+        int no = orderDao.insert(order);
+        return resJson(no,"订单创建成功",orderNo);
     }
 
     /*
@@ -148,28 +145,29 @@ public class UserService implements IUserService {
     4修改状态 1-已支付待发货
     5生成交易流水 1-支付
      */
-    @Transactional
     @Override
+    @Transactional
     public JSONObject afterPay(String userPass, String orderNo, Integer uId) {
         //验证支付密码
-        userPass = MD5Util.encode(userPass);
+        userPass = MD5Util.encode(userPass).toUpperCase(Locale.ROOT);
         User u = new User();
         u.setId(uId);
         User user = userDao.query(u).get(0);
+        System.out.println();
         if(!user.getUserPass().equals(userPass)){
             logger.info("密码错误");
-            return resJson(0,"密码错误",orderNo);
+            return resJson(0,"支付密码错误",orderNo);
         }
         //验证余额
         Order o = new Order();
         o.setOrderNo(orderNo);
         Order order = orderDao.query(o).get(0);
-        if(user.getMoney().compareTo(order.getPrice()) == -1){
+        if(user.getMoney().compareTo(order.getPayMoney()) == -1){
             logger.info("余额不足");
             return resJson(2,"余额不足",orderNo);
         }
         //扣减余额
-        user.setMoney(user.getMoney().subtract(order.getPrice()));
+        user.setMoney(user.getMoney().subtract(order.getPayMoney()));
         int row = userDao.subMoney(user);
         if(row != 0){
             logger.info("余额已扣减");
@@ -185,10 +183,15 @@ public class UserService implements IUserService {
         Trade trade = new Trade();
         trade.setUId(uId);
         trade.setTradeType(1);
-        trade.setTradeMoney(user.getMoney());
+        trade.setTradeMoney(order.getPayMoney());
         trade.setOrderNo(orderNo);
         int row3 = tradeDao.insert(trade);
         return resJson(1,"下单成功",null);
+    }
+
+    @Override
+    public List<Order> orderList(Order order) {
+        return null;
     }
 
     public JSONObject resJson(Integer code, String msg, Object obj){

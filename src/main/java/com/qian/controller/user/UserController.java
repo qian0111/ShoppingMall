@@ -7,7 +7,9 @@ import com.qian.controller.manager.GoodsController;
 import com.qian.model.manager.Goods;
 import com.qian.model.manager.Order;
 import com.qian.service.manager.IGoodsService;
+import com.qian.service.manager.IOrderService;
 import com.qian.service.user.IUserService;
+import com.sun.org.apache.xpath.internal.operations.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class UserController extends BaseController{
     private IGoodsService goodsService;
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IOrderService orderService;
     @Autowired
     private RedisUtil redisUtil;
 
@@ -116,13 +120,34 @@ public class UserController extends BaseController{
 
     //订单页
     @RequestMapping("/orderPage")
-    public ModelAndView orderPage(Integer uId){
+    public ModelAndView orderPage(Integer uId, String gName, Integer pageNo, Integer pageCount){
         ModelAndView mv = new ModelAndView();
         //用户名
         mv.addObject("userName", redisUtil.get("u"+uId));
         mv.addObject("uId",uId);
-        logger.info("订单页：");
+        //获取订单列表
+        Order order = new Order();
+        if(gName != null){
+            order.setgName(gName);
+        }
+        if(pageNo == null) {
+            //当没有传页码时，默认第1页
+            pageNo = 1;
+            pageCount = 5;
+        }
+        order.setuId(uId);
+        order.setPageNo(pageNo);
+        order.setPageCount(pageCount);
+        List<Order> orderList = orderService.orderList(order);
+        mv.addObject("orderList",orderList);
+        mv.addObject("gName", gName);
+        int totalCount = orderService.countOrder(order);
+        mv.addObject("totalCount", totalCount);
+        mv.addObject("pageNo", pageNo);
+        mv.addObject("pageCount",pageCount);
         mv.setViewName("customer/c_order");
+
+        logger.info("订单页：" + uId);
         return mv;
     }
 

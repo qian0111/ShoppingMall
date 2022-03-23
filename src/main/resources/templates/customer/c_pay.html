@@ -99,7 +99,7 @@
 						<br>
 						<br>
 							<span style="font-size: 18px;padding-left: 320px;color: rgba(12,12,12,0.89)">总价：</span>
-							<span id="sum" style="font-size: 28px; color: red;"th:text="${order.price}+'￥'"></span>
+							<span id="sum" style="font-size: 28px; color: red;"th:text="${order.payMoney}+'￥'"></span>
 						<br><br>
 						<span style="padding-left: 390px;"></span>
 						<button type="button" class="btn btn-danger" onclick="payNow()">立即支付</button>
@@ -162,14 +162,16 @@
 				//调用下单方法
 				$.ajax({
 					url:'generateOrder',
+					async: false,
 					data:{"buyCount":[[${order.buyCount}]], "gId":[[${order.gId}]], "uId":[[${order.uId}]]},
 					type:"POST",
 					success:function(str){//请求成功之后的回调函数，接收服务端响应的数据
 						if(str === "0"){
-							$("#worning").show()
 							//库存不足，关闭弹窗
 							layer.close(index);
-						} else {
+							alert("库存不足");
+						}
+						else{
 							orderNo = str;
 						}
 					},
@@ -178,18 +180,19 @@
 					}
 				});
 				var pay_res = pay(res, orderNo);
+				console.info(pay_res);
 				if(pay_res == 1){
 					//支付成功，跳转到我的订单页
-					window.location.href = "orderPage?id="+[[${uId}]];
+					window.location.href = "orderPage?uId="+[[${uId}]];
 				} else {
 					//支付失败，关闭支付密码弹出层
-					$("#worning").show()
-					layer.close(index);
+					window.location.href = "orderPage?uId="+[[${uId}]];
 				}
 			}
 		});
 	}
 	function pay(userPass, orderNo){
+		var code;
 		//向服务端发送支付请求
 		$.ajax({
 			url: "afterPay",
@@ -198,9 +201,11 @@
 			type: "post",
 			async: false,
 			success:function(res){
-				return res.code;
+				alert(res.msg);
+				code = res.code;
 			}
 		});
+		return code;
 	}
 </script>
 </html>

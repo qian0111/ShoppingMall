@@ -63,6 +63,14 @@
         update order_info set order_status=5 where order_no = #{orderNo}
     </update>
 
+    <update id="upRefond" parameterType="java.lang.String">
+        update order_info set order_status=4 where order_no = #{orderNo}
+    </update>
+
+    <update id="recieved" parameterType="java.lang.String">
+        update order_info set order_status=3 where order_no = #{orderNo}
+    </update>
+
     <update id="deliver" parameterType="java.lang.String">
         update order_info set order_status=2 where order_no = #{orderNo}
     </update>

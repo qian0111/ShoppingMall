@@ -44,7 +44,7 @@
 					<div class="pull-left">
 						<div class="logo">
 							<a >
-								<img id="logoImg" src="/sm/static/images/welcome.png" alt="" />
+								<img id="logoImg" src="/sm/static/images/welcome.png"/>
 							</a>
 						</div>
 					</div>
@@ -73,7 +73,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row clearfix" style="padding-top:30px;background-color: white;position:relative;z-index: -1">
+		<div class="row clearfix" style="padding-top:30px;background-color: white;">
 			<div class="col-md-12 column">
 				<div class="row clearfix">
 					<div class="col-md-12 column"  th:each="order:${orderList}">
@@ -82,7 +82,7 @@
 								<h1 style="padding-bottom: 10px;">
 									<span style="font-size: 15px;" th:text="'时间：'+${order.createTime}"></span>
 									<span style="padding-left: 30px;"></span>
-									<span style="font-size: 15px;" th:text="'订单号：'+${order.orderNo}"></span>
+									<span style="font-size: 15px;" id="idOrderNo" th:text="'订单号：'+${order.orderNo}"></span>
 									<br>
 								</h1>
 							</div>
@@ -105,11 +105,11 @@
 									<span style="padding-left: 60px;">
 										<span class="label label-default" style="font-size: 16px; font-weight: 400;" th:text="${order.statusName}" th:value="${order.orderStatus}"></span>
 										<span style="padding-left: 100px"></span>
-										<span th:if="${order.orderStatus eq 0}" class="label label-danger" style="font-size: 16px; font-weight: 400;">立即支付</span>
-										<span th:if="${order.orderStatus eq 1}" class="label label-danger" style="font-size: 16px; font-weight: 400;">申请退货</span>
-										<span th:if="${order.orderStatus eq 2}" class="label label-danger" style="font-size: 16px; font-weight: 400;">立即签收</span>
-										<span th:if="${order.orderStatus eq 3}" class="label label-danger" style="font-size: 16px; font-weight: 400;">申请退货</span>
-									</span>						
+										<a th:onclick="payNow([[${order.orderNo}]])" th:if="${order.orderStatus eq 0}" class="label label-danger" style="font-size: 16px; font-weight: 400;">立即支付</a>
+										<a th:onclick="applyRefund([[${order.orderNo}]]);" th:if="${order.orderStatus eq 1}" class="label label-danger" style="font-size: 16px; font-weight: 400;">申请退货</a>
+										<a th:onclick="recieved([[${order.orderNo}]]);" th:if="${order.orderStatus eq 2}" class="label label-danger" style="font-size: 16px; font-weight: 400;">立即签收</a>
+										<a th:onclick="applyRefund([[${order.orderNo}]]);" th:if="${order.orderStatus eq 3}" class="label label-danger" style="font-size: 16px; font-weight: 400;">申请退货</a>
+									</span>
 								</h1>									
 							</div>
 						</div>
@@ -177,8 +177,68 @@
 	});
 	function search(){
 		var gName = $("#gName").val();
-		console.info(gName);
-		window.location.href = "orderPage?&uId="+[[${uId}]] +"&gName="+gName;
+		window.location.href = "orderPage?uId="+[[${uId}]]+"&gName="+gName;
 	}
+	function applyRefund(no){
+		console.info("applyR"+no);
+		$.ajax({
+			url: "refundApply",
+			data:{"orderNo" : no},
+			success:function (res){
+				alert(res.msg);
+
+			}
+		});
+		setTimeout(function() {location.reload()}, 100);
+	}
+	function recieved(no){
+		$.ajax({
+			url: "recieved",
+			data:{"orderNo" : no},
+			success:function (res){
+				alert(res.msg);
+			}
+		});
+		setTimeout(function() {location.reload()}, 100);
+	}
+</script>
+<script type="text/javascript" th:inline="javascript">
+	layui.use('layer', function(){
+		var layer = layui.layer;
+	});
+	function payNow(orderNo){
+		console.info("00000000"+orderNo);
+		layer.open({
+			skin: 'demo-class',
+			type: 2,
+			area: ['300px', '180px'],
+			content: "passPage",
+			btn: ['支付'],
+			btnAlign: 'c',
+			yes: function(index){
+				//获取弹层返回值
+				var res = window["layui-layer-iframe" + index].callbackdata();
+				var pay_res = pay(res, orderNo);
+				window.location.href = "orderPage?uId="+[[${uId}]];
+			}
+		});
+	}
+	function pay(userPass, orderNo){
+		var code;
+		//向服务端发送支付请求
+		$.ajax({
+			url: "afterPay",
+			data: {"userPass":userPass, "uId":[[${uId}]], "orderNo":orderNo},
+			dataType: "json",
+			type: "post",
+			async: false,
+			success:function(res){
+				alert(res.msg);
+				code = res.code;
+			}
+		});
+		return code;
+	}
+
 </script>
 </html>

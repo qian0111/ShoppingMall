@@ -175,7 +175,7 @@ public class GoodsController extends BaseController {
         if(categoryNow != null){
             goods.setcId(categoryNow);
         }
-        goods.setgStatus(0);
+        goods.setgStatus(2);
         goods.setPageNo(pageNo);
         goods.setPageCount(pageCount);
         //查询商品列表

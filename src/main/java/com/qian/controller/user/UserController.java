@@ -151,4 +151,18 @@ public class UserController extends BaseController{
         return mv;
     }
 
+    //申请退款
+    @RequestMapping("/refundApply")
+    public JSONObject refundApply(String orderNo){
+        logger.info("申请退款：" + orderNo);
+        return userService.upRefund(orderNo);
+    }
+
+    //签收
+    @RequestMapping("/recieved")
+    public JSONObject recieved(String orderNo){
+        logger.info("签收：" + orderNo);
+        return userService.recieved(orderNo);
+    }
+
 }

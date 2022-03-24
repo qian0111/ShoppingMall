@@ -194,6 +194,28 @@ public class UserService implements IUserService {
         return null;
     }
 
+    @Override
+    public JSONObject upRefund(String orderNo) {
+        int row = orderDao.upRefond(orderNo);
+        if(row == 1){
+            logger.info("申请退款成功：" + orderNo);
+            return resJson(row,"申请成功",null);
+        }
+        logger.info("申请退款失败：" + orderNo);
+        return resJson(row,"申请失败",null);
+    }
+
+    @Override
+    public JSONObject recieved(String orderNo) {
+        int row = orderDao.recieved(orderNo);
+        if(row == 1){
+            logger.info("签收成功：" + orderNo);
+            return resJson(row,"签收成功",null);
+        }
+        logger.info("签收失败：" + orderNo);
+        return resJson(row,"签收失败",null);
+    }
+
     public JSONObject resJson(Integer code, String msg, Object obj){
         JSONObject json = new JSONObject();
         json.put("code", code);

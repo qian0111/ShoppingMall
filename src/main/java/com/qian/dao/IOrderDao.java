@@ -19,4 +19,8 @@ public interface IOrderDao {
     public Integer insert(Order order);
     //支付
     public int afterPay(Order order);
+    //申请退款
+    public int upRefond(String orderNo);
+    //申请退款
+    public int recieved(String orderNo);
 }

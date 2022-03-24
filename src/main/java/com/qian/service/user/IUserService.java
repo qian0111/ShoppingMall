@@ -22,5 +22,8 @@ public interface IUserService {
     public JSONObject afterPay(String userPass, String orderNo, Integer uId);
     //获取订单列表
     public List<Order> orderList(Order order);
-
+    //修改为退款状态
+    public JSONObject upRefund(String orderNo);
+    //签收
+    public JSONObject recieved(String orderNo);
 }

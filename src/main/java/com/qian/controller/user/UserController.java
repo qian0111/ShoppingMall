@@ -6,6 +6,8 @@ import com.qian.controller.manager.BaseController;
 import com.qian.controller.manager.GoodsController;
 import com.qian.model.manager.Goods;
 import com.qian.model.manager.Order;
+import com.qian.model.user.Cart;
+import com.qian.model.user.User;
 import com.qian.service.manager.IGoodsService;
 import com.qian.service.manager.IOrderService;
 import com.qian.service.user.IUserService;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -163,6 +166,112 @@ public class UserController extends BaseController{
     public JSONObject recieved(String orderNo){
         logger.info("签收：" + orderNo);
         return userService.recieved(orderNo);
+    }
+
+    //搜索页
+    @RequestMapping("/searchPage")
+    public ModelAndView searchPage(Integer uId, String gName, Integer pageNo,
+            Integer pageCount, Integer cId, Integer parentId){
+        ModelAndView mv = new ModelAndView();
+        //用户名
+        mv.addObject("userName", redisUtil.get("u"+uId));
+        mv.addObject("uId",uId);
+        //获取商品列表
+        Goods goods = new Goods();
+        if(gName != null){
+            goods.setgName(gName);
+        }
+        if(cId != null){
+            goods.setcId(cId);
+        }
+        if (parentId != null){
+            goods.setParentId(parentId);
+        }
+        if(pageNo == null) {
+            //当没有传页码时，默认第1页
+            pageNo = 1;
+            pageCount = 8;
+        }
+        goods.setPageNo(pageNo);
+        goods.setPageCount(pageCount);
+        List<Goods> goodsList = goodsService.goodsList(goods);
+        mv.addObject("goodsList",goodsList);
+        mv.addObject("gName", gName);
+        int totalCount = goodsService.countGoods(goods);
+        mv.addObject("totalCount", totalCount);
+        mv.addObject("pageNo", pageNo);
+        mv.addObject("pageCount",pageCount);
+        mv.setViewName("customer/c_search");
+
+        logger.info("搜索页：" + uId + ", 搜索内容：" + gName);
+        return mv;
+    }
+
+    //加入购物车
+    @RequestMapping("/addCart")
+    public JSONObject cartPage(Integer uId, Integer gId, Integer buyCount){
+        ModelAndView mv = new ModelAndView();
+        //添加加购信息信息
+        Cart cart = new Cart();
+        cart.setGId(gId);
+        cart.setUId(uId);
+        cart.setBuyCount(buyCount);
+        //加购
+        int row = userService.addCart(cart);
+        if(row != 0){
+            logger.info("加入购物车  用户：" + uId + "，商品：" + gId + "，数量：" + buyCount);
+            return resJson(1,"商品已加入购物车", null);
+        }
+        logger.info("加入购物车失败");
+        return resJson(0,"加入购物车失败", null);
+    }
+
+    //购物车
+    @RequestMapping("/cartPage")
+    public ModelAndView cartPage(Integer uId){
+        ModelAndView mv = new ModelAndView();
+        //用户名
+        mv.addObject("userName", redisUtil.get("u"+uId));
+        mv.addObject("uId",uId);
+        //获取购物车清单
+        Cart cart = new Cart();
+        cart.setUId(uId);
+        List<Cart> cartList = userService.cart(cart);
+        mv.addObject("cartList", cartList);
+        mv.setViewName("customer/c_cart");
+        logger.info("购物车：" + uId);
+        return mv;
+    }
+
+    //从购物车中删除
+    @RequestMapping("/delCart")
+    public JSONObject delCart(Integer uId, Integer gId){
+        Cart cart = new Cart();
+        cart.setUId(uId);
+        cart.setGId(gId);
+        int row = userService.delCart(cart);
+        if(row != 0){
+            logger.info("从购物车中删除  用户：" + uId + "，商品：" + gId);
+            return resJson(1,"删除成功", null);
+        }
+        logger.info("删除购物车商品失败 用户：" + uId + "，商品：" + gId);
+        return resJson(0,"删除失败", null);
+    }
+
+    //个人中心
+    @RequestMapping("/infoPage")
+    public ModelAndView infoPage(Integer uId){
+        ModelAndView mv = new ModelAndView();
+        //用户名
+        mv.addObject("userName", redisUtil.get("u"+uId));
+        mv.addObject("uId",uId);
+        User u = new User();
+        u.setId(uId);
+        User user = userService.loginCheck(u);
+        mv.addObject("user",user);
+        mv.setViewName("customer/c_info");
+        logger.info("个人中心：" + uId);
+        return mv;
     }
 
 }

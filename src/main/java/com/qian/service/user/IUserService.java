@@ -3,6 +3,7 @@ package com.qian.service.user;
 import com.alibaba.fastjson.JSONObject;
 import com.qian.model.manager.Goods;
 import com.qian.model.manager.Order;
+import com.qian.model.user.Cart;
 import com.qian.model.user.User;
 
 import java.util.List;
@@ -26,4 +27,10 @@ public interface IUserService {
     public JSONObject upRefund(String orderNo);
     //签收
     public JSONObject recieved(String orderNo);
+    //购物车
+    public List<Cart> cart(Cart cart);
+    //加购
+    public int addCart(Cart cart);
+    //从购物车中删除
+    public int delCart(Cart cart);
 }

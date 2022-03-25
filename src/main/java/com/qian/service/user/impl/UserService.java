@@ -3,12 +3,10 @@ package com.qian.service.user.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.qian.config.RedisUtil;
 import com.qian.controller.manager.GoodsController;
-import com.qian.dao.IGoodsDao;
-import com.qian.dao.IOrderDao;
-import com.qian.dao.ITradeDao;
-import com.qian.dao.IUserDao;
+import com.qian.dao.*;
 import com.qian.model.manager.Goods;
 import com.qian.model.manager.Order;
+import com.qian.model.user.Cart;
 import com.qian.model.user.Trade;
 import com.qian.model.user.User;
 import com.qian.service.user.IUserService;
@@ -37,6 +35,8 @@ public class UserService implements IUserService {
     private IOrderDao orderDao;
     @Autowired
     private ITradeDao tradeDao;
+    @Autowired
+    private ICartDao cartDao;
     @Autowired
     private RedisUtil redisUtil;
 
@@ -214,6 +214,35 @@ public class UserService implements IUserService {
         }
         logger.info("签收失败：" + orderNo);
         return resJson(row,"签收失败",null);
+    }
+
+    @Override
+    public List<Cart> cart(Cart cart) {
+        List<Cart> cartList = cartDao.query(cart);
+        for(Cart c : cartList){
+            Goods g = new Goods();
+            g.setId(c.getGId());
+            Goods goods = goodsDao.query(g).get(0);
+            c.setGImage(goods.getgImage());
+            c.setGName(goods.getgName());
+            c.setGPrice(goods.getgPrice());
+            c.setTotalPrice(goods.getgPrice().multiply(BigDecimal.valueOf(c.getBuyCount())));
+        }
+        return cartList;
+    }
+
+    @Override
+    public int addCart(Cart cart) {
+        int count = cartDao.count(cart).intValue();
+        if(count == 0){
+            return cartDao.insert(cart);
+        }
+        return cartDao.update(cart);
+    }
+
+    @Override
+    public int delCart(Cart cart) {
+        return cartDao.delete(cart);
     }
 
     public JSONObject resJson(Integer code, String msg, Object obj){

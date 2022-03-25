@@ -12,7 +12,7 @@ public class Order {
     private BigDecimal gPrice;//商品价格
     private Integer buyCount;//购买数量
     private Timestamp updateTime;//更新时间
-    private Timestamp createTime;//更新时间
+    private Timestamp createTime;//创建时间
     private BigDecimal payMoney;//支付金额
     private Integer orderStatus;//订单状态
     private Integer pageNo;//分页：第n页

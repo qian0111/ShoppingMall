@@ -171,6 +171,9 @@
 
 					}
 				});
+				if(orderNo == null){
+					return;
+				}
 				var pay_res = pay(res, orderNo);
 				console.info(pay_res);
 				if(pay_res == 1){

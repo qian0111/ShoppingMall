@@ -1,0 +1,160 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>buyall</title>
+  <!-- ================= Favicon ================== -->
+  <!-- Standard -->
+  <link rel="shortcut icon" href="http://placehold.it/64.png/000/fff">
+  <!-- Retina iPad Touch Icon-->
+  <link rel="apple-touch-icon" sizes="144x144" href="http://placehold.it/144.png/000/fff">
+  <!-- Retina iPhone Touch Icon-->
+  <link rel="apple-touch-icon" sizes="114x114" href="http://placehold.it/114.png/000/fff">
+  <!-- Standard iPad Touch Icon-->
+  <link rel="apple-touch-icon" sizes="72x72" href="http://placehold.it/72.png/000/fff">
+  <!-- Standard iPhone Touch Icon-->
+  <link rel="apple-touch-icon" sizes="57x57" href="http://placehold.it/57.png/000/fff">
+  <!-- Styles -->
+  <link rel="stylesheet" type="text/css" href="/sm/static/layui/css/layui.css">
+  <link href="/sm/static/css/fontawesome-all.min.css" rel="stylesheet">
+  <link href="/sm/static/css/themify-icons.css" rel="stylesheet">
+  <link href="/sm/static/css/mmc-chat.css" rel="stylesheet" />
+  <link href="/sm/static/css/sidebar.css" rel="stylesheet">
+  <link href="/sm/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/sm/static/css/nixon.css" rel="stylesheet">
+  <link href="/sm/static/css/lobipanel.min.css" rel="stylesheet">
+  <link href="/sm/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container" style="background-color: white">
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+      <div class="header">
+        <div class="pull-left">
+          <div class="logo">
+            <a th:href="@{'mainPage?id='+${uId}}">
+              <img id="logoImg" src="/sm/static/images/welcome.png" alt="" />
+            </a>
+          </div>
+        </div>
+        <div class="pull-right p-r-15">
+          <ul>
+            <li class="header-icon dib input-group input-group-default">
+              <input type="text" id="gName" placeholder="请输入内容" th:value="${gName}" class="form-control " style="height: 30px; width: 300px;">
+              <a class="ti-search" style="padding-left: 12px;color: white" onclick="searchSth()"></a>
+            </li>
+            <span class="header-icon dib" style="width: 50px;"></span>
+            <li class="header-icon dib">
+              <i class="ti-shopping-cart"></i>
+              <a class="user-avatar" th:href="@{'orderPage?uId='+${uId}}" style="color: white">购物车</a>
+            </li>
+            <li class="header-icon dib">
+              <i class="ti-clipboard"></i>
+              <a class="user-avatar" th:href="@{'orderPage?uId='+${uId}}" style="color: white">我的订单</a>
+            </li>
+            <li class="header-icon dib">
+              <!-- <img class="avatar-img" src="img/avatar/1.jpg" alt="" /> -->
+              <i class="ti-user"></i>
+              <a class="user-avatar" th:text="${userName}" th:href="@{'orderPage?uId='+${uId}}" style="color: white">用户未登录</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--  <div class="row clearfix" style="padding-top: 60px;width: 97%; padding-left:80px;">-->
+<!--    <button th:if="${cName ne null}" type="button" class="btn btn-danger btn-flat btn-addon m-b-10 m-l-5"><i class="ti-close"></i><span th:text="${cName}"></span></button>-->
+<!--    <button th:if="${parentName ne null}" type="button" class="btn btn-danger btn-flat btn-addon m-b-10 m-l-5"><i class="ti-close"></i><span th:text="${parentName}"></span></button>-->
+<!--    <button th:if="${gName ne null}" type="button" class="btn btn-danger btn-flat btn-addon m-b-10 m-l-5"><i class="ti-close"></i><span th:text="${gName}"></span></button>-->
+<!--  </div>-->
+  <div class="row clearfix" style="width: 97%; padding-left:65px; padding-top: 50px">
+  <div class="col-md-12 column">
+       <div class="card-body">
+         <p class="text-muted m-b-15"></p>
+         <div class="row clearfix" th:each="i:${#numbers.sequence(1, 2)}">
+           <div class="col-md-3" style="padding-right:30px;"  th:each="j:${#numbers.sequence(1, 4)}">
+             <div th:if="${goodsList.size() > (i-1)*4+j-1}" class="thumbnail">
+               <a th:href="@{'describePage?id='+${goodsList.get((i-1)*4+j-1).id}}+'&uId='+${uId}">
+                 <img style="width:100%" th:src="@{/static/images/}+${goodsList.get((i-1)*4+j-1).gImage}">
+                 <div class="caption">
+                   <div class="card-header">
+                     <h4 style="color: red; font-size: 18px;" th:text="'￥'+${goodsList.get((i-1)*4+j-1).gPrice}"></h4>
+                   </div>
+                   <p th:text="${goodsList.get((i-1)*4+j-1).gName}"></p>
+                 </div>
+               </a>
+             </div>
+           </div>
+         </div>
+       </div>
+    <div id="lp" align="center"></div>
+  </div>
+</div>
+</div>
+</body>
+<script src="/sm/static/js/jquery-1.9.1.min.js"></script>
+<!-- /# content wrap -->
+<script src="/sm/static/js/jquery.min.js"></script>
+<!-- jquery vendor -->
+<script src="/sm/static/js/jquery.nanoscroller.min.js"></script>
+<!-- nano scroller -->
+<script src="/sm/static/js/sidebar.js"></script>
+<!-- sidebar -->
+<script src="/sm/static/js/bootstrap.min.js"></script>
+<!-- bootstrap -->
+<script src="/sm/static/js/mmc-common.js"></script>
+<script src="/sm/static/js/mmc-chat.js"></script>
+<!--  Chart js -->
+<script src="/sm/static/js/Chart.bundle.js"></script>
+<script src="/sm/static/js/chartjs-init.js"></script>
+<!-- // Chart js -->
+<!--  Datamap -->
+<script src="/sm/static/js/d3.min.js"></script>
+<script src="/sm/static/js/topojson.js"></script>
+<script src="/sm/static/js/datamaps.world.min.js"></script>
+<script src="/sm/static/js/datamap-init.js"></script>
+<script src="/sm/static/js/lobipanel.js"></script>
+<!-- // Datamap -->
+<script src="/sm/static/js/scripts.js"></script>
+<script src="/sm/static/layui/layui.js"></script>
+<!-- scripit init-->
+<script type="text/javascript" th:inline="javascript">
+  //加载模块（组件）
+  layui.use(['layer','laypage'], function(){
+    //创建弹出层对象
+    var layer = layui.layer;
+    //创建分页对象
+    var laypage = layui.laypage;
+    //执行一个laypage实例
+    laypage.render({
+      elem: 'lp' //注意，这里的lp是id，不用加#号
+      ,count: [[${totalCount}]] //数据总数，从服务端得到
+      ,limit: [[${pageCount}]] //每页显示的条数，laypage将会借助 count 和 limit 计算出分页数。
+      ,curr: [[${pageNo}]]//起始页码
+      ,jump: function(obj, first){
+        var pageNo = obj.curr;
+        var pageCount = obj.limit;
+        var url = "searchPage?pageNo=" + pageNo;
+        url += "&pageCount="+ pageCount;
+        url += "&uId="+[[${uId}]];
+        url += "&gName="+$("#gName").val();
+        console.info(url);
+        //首次不执行
+        if(!first){
+          window.location.href = url;
+          //ajax仅能用于前后端数据交互，不能用于页面跳转
+        }
+      }
+    });
+  });
+
+  function searchSth(){
+    var gName = $("#gName").val();
+    window.location.href = "searchPage?uId=" + [[${uId}]] + "&gName=" + gName;
+  }
+</script>
+</html>

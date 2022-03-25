@@ -96,7 +96,7 @@
 						</h1>
 						<br>
 						<span style="padding-left: 300px;"></span>
-						<button type="button" class="btn btn-default">加入购物车</button>
+						<button type="button" class="btn btn-default" onclick="addCart()">加入购物车</button>
 						<span style="padding-left: 10px;"></span>
 						<button type="button" class="btn btn-danger " onclick="buyNow()">立即购买</button>
 					</div>
@@ -156,6 +156,22 @@
 				var url = "payPage?buyCount="+str.buyCount+"&gId="+str.gId+"&uId="+str.uId;
 				console.info(url);
 				window.location.href = url;
+			},
+			error:function(){//请求失败之后的回调函数
+
+			}
+		})
+	}
+	function addCart(){
+		var buyCount = parseInt($("#number").val());
+		var gId = [[${goods.id}]];
+		var uId = [[${uId}]];
+		$.ajax({
+			url: "addCart",//请求地址
+			type:"POST",
+			data: {"buyCount":buyCount, "gId":gId, "uId":uId},
+			success:function(str){//请求成功之后的回调函数，接收服务端响应的数据
+				alert(str.msg);
 			},
 			error:function(){//请求失败之后的回调函数
 

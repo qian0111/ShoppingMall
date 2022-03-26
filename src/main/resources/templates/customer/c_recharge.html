@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<!-- Styles -->
+	<link rel="stylesheet" type="text/css" href="/sm/static/layui/css/layui.css">
+	<link href="/sm/static/css/fontawesome-all.min.css" rel="stylesheet">
+	<link href="/sm/static/css/themify-icons.css" rel="stylesheet">
+	<link href="/sm/static/css/mmc-chat.css" rel="stylesheet" />
+	<link href="/sm/static/css/sidebar.css" rel="stylesheet">
+	<link href="/sm/static/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/sm/static/css/nixon.css" rel="stylesheet">
+	<link href="/sm/static/css/lobipanel.min.css" rel="stylesheet">
+	<link href="/sm/static/css/style.css" rel="stylesheet">
+	<title></title>
+</head>
+<body>
+	<div class="login-form" style="height:250px">
+		<form>
+			<div class="form-group">
+				<label>请输入充值金额 （单位：元）</label>
+				<input type="text" class="form-control" id="money">
+			</div>	
+		</form>
+		<button class="btn btn-danger btn-flat m-b-30 m-t-30" onclick="recharge();">充值</button>
+	</div>	
+</body>
+<script src="/sm/static/js/jquery-1.9.1.min.js"></script>
+<script src="/sm/static/layui/layui.js"></script>
+<script>
+    function recharge(){
+        $.ajax({
+            url: "recharge",
+            data: {"money":$("#money").val(), "uId":[[${uId}]]},
+            type: "POST",
+            success:function(str){
+                alert(str.msg);
+            },
+            error:function(){
+
+            }
+        });
+        setTimeout("reloadAgain()", 100);
+    }
+	function reloadAgain(){
+		//关闭弹出层
+		var index = parent.layer.getFrameIndex(window.name);
+		//关闭当前页
+		parent.layer.close(index);
+		//父页面刷新
+		parent.location.reload();
+	}
+</script>			
+</html>

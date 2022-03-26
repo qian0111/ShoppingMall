@@ -11,7 +11,6 @@ import com.qian.model.user.User;
 import com.qian.service.manager.IGoodsService;
 import com.qian.service.manager.IOrderService;
 import com.qian.service.user.IUserService;
-import com.sun.org.apache.xpath.internal.operations.Or;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -265,13 +264,73 @@ public class UserController extends BaseController{
         //用户名
         mv.addObject("userName", redisUtil.get("u"+uId));
         mv.addObject("uId",uId);
+
+        mv.setViewName("customer/c_info");
+        logger.info("个人中心：" + uId);
+        return mv;
+    }
+
+    //用户信息
+    @RequestMapping("/detailPage")
+    public ModelAndView detailPage(Integer uId){
+        ModelAndView mv = new ModelAndView();
+        //用户名
+        mv.addObject("userName", redisUtil.get("u"+uId));
+        mv.addObject("uId",uId);
+        //用户信息
         User u = new User();
         u.setId(uId);
         User user = userService.loginCheck(u);
         mv.addObject("user",user);
-        mv.setViewName("customer/c_info");
-        logger.info("个人中心：" + uId);
+        mv.setViewName("customer/c_details");
+        logger.info("个人信息：" + uId);
         return mv;
+    }
+
+    //充值页
+    @RequestMapping("/moneyPage")
+    public ModelAndView moneyPage(Integer uId){
+        ModelAndView mv = new ModelAndView();
+        //用户名
+        mv.addObject("userName", redisUtil.get("u"+uId));
+        mv.addObject("uId",uId);
+        //用户信息
+        User u = new User();
+        u.setId(uId);
+        User user = userService.loginCheck(u);
+        mv.addObject("user",user);
+        mv.setViewName("customer/c_moeny");
+        logger.info("充值页：" + uId);
+        return mv;
+    }
+
+    //充值弹窗
+    @RequestMapping("/rechargePage")
+    public ModelAndView rechargePage(Integer uId){
+        ModelAndView mv = new ModelAndView();
+        //用户名
+        mv.addObject("userName", redisUtil.get("u"+uId));
+        mv.addObject("uId",uId);
+        //用户信息
+        User u = new User();
+        u.setId(uId);
+        User user = userService.loginCheck(u);
+        mv.addObject("user",user);
+        mv.setViewName("customer/c_recharge");
+        logger.info("充值弹窗：" + uId);
+        return mv;
+    }
+
+    //充值
+    @RequestMapping("/recharge")
+    public JSONObject recharge(Integer uId, BigDecimal money){
+        int row = userService.recharge(uId, money);
+        if(row != 0){
+            logger.info("充值  用户：" + uId + "，金额：" + money);
+            return resJson(1,"充值成功", null);
+        }
+        logger.info("充值  用户：" + uId + "，金额：" + money);
+        return resJson(0,"充值失败", null);
     }
 
 }

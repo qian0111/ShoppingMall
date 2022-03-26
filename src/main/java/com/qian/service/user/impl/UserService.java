@@ -245,6 +245,35 @@ public class UserService implements IUserService {
         return cartDao.delete(cart);
     }
 
+    /*
+    开启事务
+    1 更新账户余额
+    2 生成交易流水
+     */
+    @Override
+    @Transactional
+    public int recharge(Integer uId, BigDecimal money) {
+        User u = new User();
+        u.setId(uId);
+        User user = userDao.query(u).get(0);
+        user.setMoney(user.getMoney().add(money));
+        int row = userDao.subMoney(user);//更新账户余额
+        if(row != 0){
+            logger.info("充值成功");
+            Trade trade = new Trade();
+            trade.setUId(uId);
+            trade.setTradeMoney(money);
+            trade.setTradeType(2);
+            int row2 = tradeDao.insert(trade);//生成交易流水
+            if(row2 != 0){
+                logger.info("生成交易流水");
+                return 1;
+            }
+            return 0;
+        }
+        return 0;
+    }
+
     public JSONObject resJson(Integer code, String msg, Object obj){
         JSONObject json = new JSONObject();
         json.put("code", code);

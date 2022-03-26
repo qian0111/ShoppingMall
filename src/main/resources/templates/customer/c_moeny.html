@@ -1,0 +1,43 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="/sm/static/layui/css/layui.css">
+		<link href="/sm/static/css/fontawesome-all.min.css" rel="stylesheet">
+		<link href="/sm/static/css/themify-icons.css" rel="stylesheet">
+		<link href="/sm/static/css/mmc-chat.css" rel="stylesheet" />
+		<link href="/sm/static/css/sidebar.css" rel="stylesheet">
+		<link href="/sm/static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/sm/static/css/nixon.css" rel="stylesheet">
+		<link href="/sm/static/css/lobipanel.min.css" rel="stylesheet">
+		<link href="/sm/static/css/style.css" rel="stylesheet">
+	</head>
+	<body>
+		<h1 style="padding-top: 30px;">
+			<span style="font-size: 18px;padding-left: 50px;">账户余额：</span>
+			<span style="font-size: 18px; color: red;" th:text="${user.money} + '元'"></span>
+			<span style="padding-left: 100px;"></span>
+			<button type="button" class="btn btn-danger" onclick="recharge();">充值</button>
+		</h1>
+	</body>
+<script src="/sm/static/js/jquery-1.9.1.min.js"></script>
+<script src="/sm/static/layui/layui.js"></script>
+<script type="text/javascript" th:inline="javascript">
+	//加载模块（组件）
+	layui.use(['layer'], function(){
+		//创建弹出层对象
+		var layer = layui.layer;
+	});
+	
+	function recharge(){		
+		layer.open({
+			type: 2,
+			title: "充值",
+			offset: '200px',
+			area: ['450px', '300px'],
+			content: "rechargePage?uId="+[[${uId}]]
+		});
+	}
+	
+</script>
+</html>

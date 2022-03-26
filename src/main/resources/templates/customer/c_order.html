@@ -43,8 +43,8 @@
 				<div class="header">
 					<div class="pull-left">
 						<div class="logo">
-							<a >
-								<img id="logoImg" src="/sm/static/images/welcome.png"/>
+							<a th:href="@{'mainPage?id='+${uId}}">
+								<img id="logoImg" src="/sm/static/images/welcome.png" alt="" />
 							</a>
 						</div>
 					</div>
@@ -57,16 +57,16 @@
 							<span class="header-icon dib" style="width: 50px;"></span>
 							<li class="header-icon dib">
 								<i class="ti-shopping-cart"></i>
-								<span class="user-avatar" href="">购物车</span>
+								<a class="user-avatar" th:href="@{'cartPage?uId='+${uId}}" style="color: white">购物车</a>
 							</li>
 							<li class="header-icon dib">
 								<i class="ti-clipboard"></i>
-								<span class="user-avatar" href="">我的订单</span>
+								<a class="user-avatar" th:href="@{'orderPage?uId='+${uId}}" style="color: white">我的订单</a>
 							</li>
 							<li class="header-icon dib">
 								<!-- <img class="avatar-img" src="img/avatar/1.jpg" alt="" /> -->
 								<i class="ti-user"></i>
-								<span class="user-avatar" th:text="${userName}">用户未登录</span>
+								<a class="user-avatar" th:text="${userName}" th:href="@{'infoPage?uId='+${uId}}" style="color: white">用户未登录</a>
 							</li>
 						</ul>
 					</div>

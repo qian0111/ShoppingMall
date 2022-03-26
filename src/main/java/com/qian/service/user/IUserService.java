@@ -6,6 +6,7 @@ import com.qian.model.manager.Order;
 import com.qian.model.user.Cart;
 import com.qian.model.user.User;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface IUserService {
@@ -33,4 +34,6 @@ public interface IUserService {
     public int addCart(Cart cart);
     //从购物车中删除
     public int delCart(Cart cart);
+    //充值
+    public int recharge(Integer uId, BigDecimal money);
 }

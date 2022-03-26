@@ -1,0 +1,115 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>buyall</title>
+		
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+		<!-- ================= Favicon ================== -->
+	    <!-- Standard -->
+	    <link rel="shortcut icon" href="http://placehold.it/64.png/000/fff">
+	    <!-- Retina iPad Touch Icon-->
+	    <link rel="apple-touch-icon" sizes="144x144" href="http://placehold.it/144.png/000/fff">
+	    <!-- Retina iPhone Touch Icon-->
+	    <link rel="apple-touch-icon" sizes="114x114" href="http://placehold.it/114.png/000/fff">
+	    <!-- Standard iPad Touch Icon--> 
+	    <link rel="apple-touch-icon" sizes="72x72" href="http://placehold.it/72.png/000/fff">
+	    <!-- Standard iPhone Touch Icon--> 
+	    <link rel="apple-touch-icon" sizes="57x57" href="http://placehold.it/57.png/000/fff">
+		
+		<!-- Styles -->
+		<link rel="stylesheet" type="text/css" href="/sm/static/layui/css/layui.css">
+		<link href="/sm/static/css/fontawesome-all.min.css" rel="stylesheet">
+		<link href="/sm/static/css/themify-icons.css" rel="stylesheet">
+		<link href="/sm/static/css/mmc-chat.css" rel="stylesheet" />
+		<link href="/sm/static/css/sidebar.css" rel="stylesheet">
+		<link href="/sm/static/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/sm/static/css/nixon.css" rel="stylesheet">
+		<link href="/sm/static/css/lobipanel.min.css" rel="stylesheet">
+		<link href="/sm/static/css/style.css" rel="stylesheet">
+	    
+		<script src="js/jquery-1.9.1.min.js"></script>
+		<script>
+			
+			function login(){
+				var phone = $("#phone").val();
+				var pass = $("#pass").val();
+				if(phone == ''){
+					alert("手机号为空！");
+					$("#phone").attr("placeholder","请输入手机号");
+					$("#phone").focus();
+					return;
+				}
+				if(pass == ''){
+					alert("密码为空！");
+					$("#pass").attr("placeholder","请输入密码");
+					$("#pass").focus();
+					return;
+				}
+				var data;
+				var regx = /1[3456789]\d{9}/;
+				if(regx.test(staffName)){
+					data = {"phone":staffName,"pass":pass};
+				} else {
+					data = {"staffName":staffName,"pass":pass};
+				}
+				
+				//ajax请求
+				$.ajax({
+					url: "loginCheck",//请求地址
+					type:"POST",//请求方式GET/POST
+					//data:{"addr":"山东青岛","userNo":"1001","phone":"18312341234"},//请求参数
+					data: data,
+					success:function(str){//请求成功之后的回调函数，接收服务端响应的数据
+						if(str == "1"){
+							$("#loginButton").text("正在跳转...");
+							setTimeout(
+								function(){
+									window.location.href="main";
+							    }
+								,800
+							);
+						} else {	
+							alert("登录失败");
+							$("#staffName").val("");
+							$("#staffName").attr("placeholder","请输入用户名");
+							$("#pass").val("");
+							$("#pass").attr("placeholder","请输入密码");
+						}
+					},
+					error:function(){//请求失败之后的回调函数
+						
+					}
+				});
+			}
+		</script>
+	</head>
+	<body style="background-color: white; overflow: hidden;" >
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-lg-offset-3">
+					<div class="login-content">
+						<div class="login-form">
+							<form>
+								<div class="form-group">
+									<label>用户名</label>
+									<span type="text" class="form-control" th:text="${user.userName}"> </span>
+								</div>
+								<div class="form-group">
+									<label>手机号</label>
+									<span type="password" class="form-control"th:text="${user.userPhone}"></span>
+								</div>
+								<div class="form-group">
+									<label>余额</label>
+									<span type="password" class="form-control"th:text="${user.money}"></span>
+								</div>
+<!--								<button type="button" class="btn btn-danger btn-flat m-b-30 m-t-30"  onclick="save();">保存</button>-->
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
